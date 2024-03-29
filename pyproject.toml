@@ -1,0 +1,24 @@
+[project]
+name = "pudink"
+version = "0.1.0"
+description = "Cozy and casual social game in Python."
+authors = [
+    {name = "tino", email = "kpetras@tutanota.com"},
+]
+dependencies = []
+requires-python = ">=3.12"
+readme = "README.md"
+license = {text = "MIT"}
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+
+[tool.pdm]
+distribution = true
+
+[tool.pdm.dev-dependencies]
+test = [
+    "pytest>=8.1.1",
+]
