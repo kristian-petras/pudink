@@ -11,14 +11,21 @@ permissions:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
+    runs-on: ${{ matrix.os }}
 
-      - name: Setup PDM
+    strategy:
+      matrix:
+        os: [windows-latest, macos-latest, ubuntu-latest]
+        python-version: [3.12]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PDM ${{ matrix.python-version }}
         uses: pdm-project/setup-pdm@v4
         with:
-          python-version: 3.12
+          python-version: ${{ matrix.python-version }}
           cache: true
 
       - name: Install dependencies
@@ -32,10 +39,10 @@ jobs:
       - name: Run tests
         run: pdm run pytest
 
-      - name: Create Executable
+      - name: Create Executable ${{ matrix.os }} ${{ matrix.python-version }}
         uses: sayyid5416/pyinstaller@v1
         with:
-          python_ver: '3.12'
+          python_ver: ${{ matrix.python-version }}
           spec: 'src/pudink/__main__.py'
-          upload_exe_with_name: 'My executable'
-          options: --onefile, --name "My App", --windowed,
+          upload_exe_with_name: 'pudink-${{ matrix.os }}'
+          options: --name "pudink", --windowed,
