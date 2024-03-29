@@ -17,21 +17,15 @@ jobs:
 
       - name: Setup PDM
         uses: pdm-project/setup-pdm@v4
-        
-      - name: Set pre-commit environment variable
-        run: echo "PY=$(python -VV | sha256sum | cut -d' ' -f1)" >> $GITHUB_ENV
-
-      - name: Cache pre-commit environments
-        uses: actions/cache@v4
         with:
-          path: ~/.cache/pre-commit/
-          key: pre-commit|${{ env.PY }}|${{ hashFiles('.pre-commit-config.yaml') }}
+          python-version: 3.12
+          cache: true
 
       - name: Install dependencies
         run: pdm install
 
       - name: Run tests
         run: pdm run pytest
-        
+
       - name: Run pre-commit hooks
         run: pdm run pre-commit run --all-files
