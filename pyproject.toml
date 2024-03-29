@@ -26,4 +26,5 @@ dev = [
     "mypy>=1.9.0",
     "isort>=5.13.2",
     "pre-commit>=3.7.0",
+    "pyinstaller>=6.5.0",
 ]
