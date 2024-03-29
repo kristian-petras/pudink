@@ -1,0 +1,25 @@
+name: Pudink
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup PDM
+        uses: pdm-project/setup-pdm@v4
+        # You are now able to use PDM in your workflow
+      - name: Install dependencies
+        run: pdm install
+      - name: Run tests
+        run: pdm run pytest
+      - name: Run pre-commit hooks
+        run: pdm run pre-commit run --all-files
