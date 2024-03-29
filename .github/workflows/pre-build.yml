@@ -24,8 +24,10 @@ jobs:
       - name: Install dependencies
         run: pdm install
 
+      - name: Run pre-commit action
+        uses: pre-commit/action@v3.0.1
+        with:
+          extra_args: --all-files --verbose
+
       - name: Run tests
         run: pdm run pytest
-
-      - name: Run pre-commit hooks
-        run: pdm run pre-commit run --all-files
