@@ -5,7 +5,9 @@ description = "Cozy and casual social game in Python."
 authors = [
     {name = "tino", email = "kpetras@tutanota.com"},
 ]
-dependencies = []
+dependencies = [
+    "pyglet>=2.0.14",
+]
 requires-python = "<3.13,>=3.12"
 readme = "README.md"
 license = {text = "MIT"}
