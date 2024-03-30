@@ -1,2 +1,3 @@
-print("hello world!")
-input("Press Enter to continue...")
+from pudink.window import window
+
+window()

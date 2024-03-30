@@ -45,4 +45,4 @@ jobs:
           python_ver: ${{ matrix.python-version }}
           spec: 'src/pudink/__main__.py'
           upload_exe_with_name: 'pudink-${{ matrix.os }}'
-          options: --onefile, --name "pudink", --console,
+          options: --onefile, --name "pudink", --windowed,
