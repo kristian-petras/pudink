@@ -5,7 +5,7 @@
 groups = ["default", "test", "dev"]
 strategy = ["cross_platform", "inherit_metadata"]
 lock_version = "4.4.1"
-content_hash = "sha256:ef99ea84becd051a583f01cb89098f267bdabbb8ad7fe44c2244485fdc6feaca"
+content_hash = "sha256:b52ae15f9e7dba8438de4eb2e9c7a67292e1a852037957707e9b0b70e40466b4"
 
 [[package]]
 name = "altgraph"
@@ -385,13 +385,13 @@ files = [
 
 [[package]]
 name = "pyglet"
-version = "2.0.14"
+version = "2.0.15"
 requires_python = ">=3.8"
 summary = "pyglet is a cross-platform games and multimedia package."
 groups = ["default"]
 files = [
-    {file = "pyglet-2.0.14-py3-none-any.whl", hash = "sha256:483b9f8be0314c615490178ab49b10b0b07cb8691f565924aace433e60047ec3"},
-    {file = "pyglet-2.0.14.tar.gz", hash = "sha256:9b3bef1532395d88600db115b2eea8c345d2851be48ad8ac64b152b16f089777"},
+    {file = "pyglet-2.0.15-py3-none-any.whl", hash = "sha256:9e4cc16efc308106fd3a9ff8f04e7a6f4f6a807c6ac8a331375efbbac8be85af"},
+    {file = "pyglet-2.0.15.tar.gz", hash = "sha256:42085567cece0c7f1c14e36eef799938cbf528cfbb0150c484b984f3ff1aa771"},
 ]
 
 [[package]]

@@ -6,7 +6,7 @@ authors = [
     {name = "tino", email = "kpetras@tutanota.com"},
 ]
 dependencies = [
-    "pyglet>=2.0.14",
+    "pyglet>=2.0.15",
     "twisted>=24.3.0",
 ]
 requires-python = "<3.13,>=3.12"
