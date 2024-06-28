@@ -77,7 +77,8 @@ class PudinkClientFactory(protocol.ClientFactory):
         elif event == ClientCallback.CONNECTION_FAILED:
             self.connecting = False
             self.connected = False
-        self.registeredCallbacks[event][self.scene](data)
+        if self.scene in self.registeredCallbacks[event]:
+            self.registeredCallbacks[event][self.scene](data)
 
     def registerCallback(self, event: ClientCallback, callback: Callable[[str], None]):
         self.registeredCallbacks[event] = {self.scene: callback}
