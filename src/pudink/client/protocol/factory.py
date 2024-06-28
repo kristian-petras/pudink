@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Callable
+from typing import Any, Callable
 
 
 from twisted.internet import protocol
@@ -21,15 +21,18 @@ class PudinkClient(protocol.Protocol):
         self.registered_callbacks = registeredCallbacks
 
     def connectionMade(self):
-        self.factory._process_callback(ClientCallback.CONNECTION_SUCCESS)
+        self.factory._process_callback(ClientCallback.CONNECTION_SUCCESS, "Connected")
 
     def dataReceived(self, data):
-        self.factory._process_callback(ClientCallback.DATA_RECEIVED)
+        self.factory._process_callback(ClientCallback.DATA_RECEIVED, data.decode())
 
     def connectionLost(self, reason):
-        self.factory._process_callback(ClientCallback.CONNECTION_LOST)
+        self.factory._process_callback(
+            ClientCallback.CONNECTION_FAILED, reason.getErrorMessage()
+        )
 
-    def sendMessage(self, msg):
+    def send_message(self, msg):
+        print(f"Sending message: {msg}")
         self.transport.write(msg.encode())
 
 
@@ -51,15 +54,19 @@ class PudinkClientFactory(protocol.ClientFactory):
         self.connected = False
 
     def clientConnectionFailed(self, connector, reason):
-        self._process_callback(ClientCallback.CONNECTION_FAILED)
+        self._process_callback(
+            ClientCallback.CONNECTION_FAILED, reason.getErrorMessage()
+        )
 
     def clientConnectionLost(self, connector, reason):
-        self._process_callback(ClientCallback.CONNECTION_FAILED)
+        self._process_callback(
+            ClientCallback.CONNECTION_FAILED, reason.getErrorMessage()
+        )
 
     def startedConnecting(self, connector):
-        self._process_callback(ClientCallback.STARTED_CONNECTING)
+        self._process_callback(ClientCallback.STARTED_CONNECTING, "Connecting")
 
-    def _process_callback(self, event: ClientCallback):
+    def _process_callback(self, event: ClientCallback, data: str):
         if event == ClientCallback.STARTED_CONNECTING:
             self.connecting = True
             self.connected = False
@@ -69,9 +76,9 @@ class PudinkClientFactory(protocol.ClientFactory):
         elif event == ClientCallback.CONNECTION_FAILED:
             self.connecting = False
             self.connected = False
-        self.registeredCallbacks[event][self.scene]()
+        self.registeredCallbacks[event][self.scene](data)
 
-    def registerCallback(self, event: ClientCallback, callback: Callable[[], None]):
+    def registerCallback(self, event: ClientCallback, callback: Callable[[str], None]):
         self.registeredCallbacks[event] = {self.scene: callback}
 
     def buildProtocol(self, addr):
