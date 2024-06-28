@@ -7,7 +7,7 @@ from pyglet.window import Window
 
 from pudink.client.protocol.factory import PudinkClientFactory
 from pudink.client.frontend.scene_manager import SceneManager
-from pudink.client.frontend.login_scene import LoginScene
+from pudink.client.frontend.login_scene import LoginController, LoginRenderer
 from pudink.client.frontend.main_scene import MainScene
 
 
@@ -34,15 +34,14 @@ class PudinkGame:
         self._window.on_key_press = self._scene_manager.on_key_press
         self._window.on_close = self.stop
 
-        login_scene = LoginScene(
-            self._window, self._scene_manager, self._connect, self._factory
-        )
+        login_controller = LoginController(self._factory, self._scene_manager)
+        login_scene = LoginRenderer(self._window, login_controller)
         main_scene = MainScene(self._window, self._scene_manager)
 
         self._scene_manager.register_scene("login", login_scene)
         self._scene_manager.register_scene("main", main_scene)
 
-        self._scene_manager.switch_to_scene("login")
+        login_controller.switch_screen("login")
 
     def _game_tick(self):
         pyglet.clock.tick()
