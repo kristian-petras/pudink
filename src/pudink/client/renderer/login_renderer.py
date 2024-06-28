@@ -95,7 +95,7 @@ class LoginRenderer:
             return
 
         data = {
-            "name": self.username_entry.value,
+            "username": self.username_entry.value,
             "password": self.password_entry.get_password(),
         }
         print(data)

@@ -2,12 +2,12 @@ from pudink.client.model.player import Player
 
 
 from dataclasses import dataclass, field
-from typing import Dict, Tuple
+from typing import Dict, Optional, Tuple
 
 
 @dataclass
 class WorldState:
-    current_player_id: str
+    current_player_id: str = None
     players: Dict[str, Player] = field(default_factory=dict)
 
     def upsert_player(self, player: Player) -> None:
@@ -30,8 +30,7 @@ class WorldState:
         """Returns all players and their locations."""
         return self.players
 
-    def get_current_player(self) -> Player:
+    def get_current_player(self) -> Optional[Player]:
+        if self.current_player_id is None:
+            return None
         return self.players[self.current_player_id]
-
-    def update(self, data) -> None:
-        print(data)

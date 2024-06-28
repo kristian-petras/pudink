@@ -24,6 +24,7 @@ class PudinkClient(protocol.Protocol):
         self.factory._process_callback(ClientCallback.CONNECTION_SUCCESS, "Connected")
 
     def dataReceived(self, data):
+        print(f"received data {data}")
         self.factory._process_callback(ClientCallback.DATA_RECEIVED, data.decode())
 
     def connectionLost(self, reason):
@@ -80,8 +81,13 @@ class PudinkClientFactory(protocol.ClientFactory):
         if self.scene in self.registeredCallbacks[event]:
             self.registeredCallbacks[event][self.scene](data)
 
-    def registerCallback(self, event: ClientCallback, callback: Callable[[str], None]):
-        self.registeredCallbacks[event] = {self.scene: callback}
+    def registerCallback(
+        self, event: ClientCallback, callback: Callable[[str], None], scene: str
+    ):
+        if event in self.registeredCallbacks:
+            self.registeredCallbacks[event][scene] = callback
+        else:
+            self.registeredCallbacks[event] = {scene: callback}
 
     def buildProtocol(self, addr):
         client = PudinkClient(self.registeredCallbacks)

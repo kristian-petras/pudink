@@ -22,6 +22,7 @@ class PudinkGame:
         host: str = "localhost",
         port: int = 8000,
     ):
+        print("Starting game")
         self._factory = factory
         self._host = host
         self._port = port
@@ -52,6 +53,7 @@ class PudinkGame:
         scene_manager.register_scene("world", world_scene)
 
         login_controller.switch_screen("login")
+        print("Game started")
 
     def _game_tick(self):
         pyglet.clock.tick()
