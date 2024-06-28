@@ -1,6 +1,6 @@
 from enum import Enum
 from typing import Any, Callable
-
+import json
 
 from twisted.internet import protocol
 
@@ -33,7 +33,8 @@ class PudinkClient(protocol.Protocol):
 
     def send_message(self, msg):
         print(f"Sending message: {msg}")
-        self.transport.write(msg.encode())
+        data = json.dumps(msg)
+        self.transport.write(data.encode())
 
 
 class PudinkClientFactory(protocol.ClientFactory):
