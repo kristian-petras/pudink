@@ -17,7 +17,7 @@ class PudinkInfrastructure:
     def __init__(
         self,
         factory: PudinkClientFactory = PudinkClientFactory(),
-        window: Window = Window(),
+        window: Window = Window(800, 600, "Pudink"),
     ):
         self.factory = factory
 
