@@ -28,6 +28,7 @@ class PudinkGame:
         self._game_loop_job = None
 
         self._window = window
+        pyglet.gl.glClearColor(0.8, 0.8, 0.8, 1.0)
 
         self._scene_manager = SceneManager(self._window)
 
