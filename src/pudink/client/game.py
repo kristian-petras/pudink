@@ -10,10 +10,8 @@ from pudink.client.frontend.scene_manager import SceneManager
 from pudink.client.frontend.login_scene import LoginScene
 from pudink.client.frontend.main_scene import MainScene
 
-background = pyglet.image.load("swamp.png")
 
-
-class PudinkInfrastructure:
+class PudinkGame:
     def __init__(
         self,
         factory: PudinkClientFactory = PudinkClientFactory(),
@@ -60,27 +58,3 @@ class PudinkInfrastructure:
         except ReactorNotRunning:
             print("Reactor already stopped")
             pass
-
-
-# this connects the protocol to a server running on port 8000
-def main():
-    # Get reactor instance
-    # # Create a player object
-    # player = Player()
-
-    # # Load the song file
-    # song = pyglet.media.load("pesnicka.mp3")
-
-    # # Queue the song for playback
-    # player.queue(song)
-
-    # # Start playing the song
-    # player.play()
-    game = PudinkInfrastructure()
-    game.run()
-    print("Game finished")
-
-
-# this only runs if the module was *not* imported
-if __name__ == "__main__":
-    main()
