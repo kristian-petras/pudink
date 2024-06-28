@@ -8,32 +8,33 @@ An example client. Run simpleserv.py first before running this.
 
 import random
 import string
+import time
 
 import pyglet
 from pyglet.media import Player
 from twisted.internet import protocol, reactor
 from twisted.internet.task import LoopingCall
+from twisted.internet.defer import Deferred
 
 background = pyglet.image.load("swamp.png")
 
 
-def game_tick(factory, window):
-    pyglet.clock.tick()
-    # pyglet.app.platform_event_loop.step(1.0)
+class Test:
+    def __init__(self, factory, window):
+        self.factory = factory
+        self.window = window
 
-    # display background image from png
-    background.blit(0, 0)
+    def game_tick(self):
+        pyglet.clock.tick()
+        self.window.switch_to()
+        self.window.dispatch_events()
+        self.window.dispatch_event("on_draw")
+        self.window.flip()
 
-    # window.close()
-    window.switch_to()
-    window.dispatch_events()
-    window.dispatch_event("on_draw")
-    window.flip()
-
-    # print("tick")
-    # if factory.client:
-    #     print("sending tick")
-    #     factory.client.sendMessage("tick")
+        # print("tick")
+        # if factory.client:
+        #     print("sending tick")
+        #     factory.client.sendMessage("tick")
 
 
 class EchoClient(protocol.Protocol):
@@ -77,6 +78,12 @@ class EchoFactory(protocol.ClientFactory):
         return p
 
 
+def stop(window: pyglet.window.Window, event: LoopingCall, a: Deferred[LoopingCall]):
+    # reactor.stop()
+    event.stop()
+    a.addCallback(lambda _: window.close())
+
+
 # this connects the protocol to a server running on port 8000
 def main():
     factory = EchoFactory()
@@ -93,8 +100,12 @@ def main():
     # Start playing the song
     player.play()
 
-    tick = LoopingCall(game_tick, factory, window)
-    tick.start(1.0 / 30.0)
+    t = Test(factory, window)
+    tick = LoopingCall(t.game_tick)
+    a = tick.start(1.0 / 30.0)
+
+    window.on_draw = lambda: background.blit(0, 0)
+    window.on_close = lambda: stop(window, tick, a)
 
     reactor.connectTCP("localhost", 8000, factory)
     reactor.run()
