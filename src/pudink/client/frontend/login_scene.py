@@ -12,6 +12,7 @@ class LoginController:
 
     def login(
         self,
+        input_data: dict[str, str],
         on_connecting: Callable[[str], None],
         on_success: Callable[[str], None],
         on_fail: Callable[[str], None],
@@ -20,7 +21,7 @@ class LoginController:
         self.factory.registerCallback(ClientCallback.CONNECTION_FAILED, on_fail)
         self.factory.registerCallback(
             ClientCallback.CONNECTION_SUCCESS,
-            lambda data: self._on_success(on_success, data),
+            lambda data: self._on_success(on_success, input_data, data),
         )
         self.factory.registerCallback(
             ClientCallback.DATA_RECEIVED, self._on_initialization
@@ -31,8 +32,13 @@ class LoginController:
         self.factory.set_scene(scene)
         self.scene_manager.switch_to_scene(scene)
 
-    def _on_success(self, renderer_on_success: Callable[[str], None], data: str):
-        self.factory.client.send_message("login")
+    def _on_success(
+        self,
+        renderer_on_success: Callable[[str], None],
+        input_data: dict[str, str],
+        data: str,
+    ):
+        self.factory.client.send_message(input_data)
         renderer_on_success(data)
 
     def _on_initialization(self, data):
@@ -44,7 +50,7 @@ class LoginController:
 class LoginRenderer:
     def __init__(self, window: pyglet.window.Window, login: LoginController) -> None:
         self.window = window
-        self.login = login
+        self.login_controller = login
         self.counter = 0
         self.batch = pyglet.graphics.Batch()
         self.label = pyglet.text.Label(
@@ -63,6 +69,7 @@ class LoginRenderer:
             anchor_y="center",
             batch=self.batch,
         )
+        self.name = "tino"
 
     def on_draw(self) -> None:
         self.window.clear()
@@ -72,7 +79,10 @@ class LoginRenderer:
 
     def on_key_press(self, symbol, modifiers) -> None:
         if symbol == pyglet.window.key.ENTER:
-            self.login.login(self._on_connecting, self._on_success, self._on_fail)
+            data = {"name": self.name, "password": "password"}
+            self.login_controller.login(
+                data, self._on_connecting, self._on_success, self._on_fail
+            )
 
     def _on_connecting(self, data: str):
         print("connecting")
