@@ -5,9 +5,10 @@ from twisted.internet.error import ReactorNotRunning
 
 from pyglet.window import Window
 
+from pudink.client.controller.login_controller import LoginController
 from pudink.client.protocol.factory import PudinkClientFactory
 from pudink.client.frontend.scene_manager import SceneManager
-from pudink.client.frontend.login_scene import LoginController, LoginRenderer
+from pudink.client.renderer.login_renderer import LoginRenderer
 from pudink.client.frontend.main_scene import MainScene
 
 
