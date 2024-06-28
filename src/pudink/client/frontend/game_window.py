@@ -1,8 +1,8 @@
 import pyglet
 
-from pudink.frontend.login_scene import LoginScene
-from pudink.frontend.main_scene import MainScene
-from pudink.frontend.scene_manager import SceneManager
+from pudink.client.frontend.login_scene import LoginScene
+from pudink.client.frontend.main_scene import MainScene
+from pudink.client.frontend.scene_manager import SceneManager
 
 
 class GameWindow(pyglet.window.Window):

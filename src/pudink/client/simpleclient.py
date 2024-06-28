@@ -1,12 +1,14 @@
 import pyglet
 from twisted.internet import reactor, endpoints
 from twisted.internet.task import LoopingCall
-from twisted.internet.defer import Deferred
 from twisted.internet.error import ReactorNotRunning
 
 from pyglet.window import Window
 
 from pudink.client.protocol.factory import PudinkClientFactory
+from pudink.client.frontend.scene_manager import SceneManager
+from pudink.client.frontend.login_scene import LoginScene
+from pudink.client.frontend.main_scene import MainScene
 
 background = pyglet.image.load("swamp.png")
 
@@ -23,9 +25,20 @@ class PudinkInfrastructure:
         self.game_loop_job = None
 
         self.window = window
-        self.window.on_draw = lambda: background.blit(0, 0)
+
+        self.scene_manager = SceneManager(self.window)
+
+        self.window.on_draw = self.scene_manager.on_draw
+        self.window.on_key_press = self.scene_manager.on_key_press
         self.window.on_close = self.stop
-        self.window.on_key_press = lambda symbol, modifiers: print(symbol, modifiers)
+
+        login_scene = LoginScene(self.window, self.scene_manager)
+        main_scene = MainScene(self.window, self.scene_manager)
+
+        self.scene_manager.register_scene("login", login_scene)
+        self.scene_manager.register_scene("main", main_scene)
+
+        self.scene_manager.switch_to_scene("login")
 
     def _game_tick(self):
         pyglet.clock.tick()
