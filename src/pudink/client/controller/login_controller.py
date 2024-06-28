@@ -1,13 +1,21 @@
+from pudink.client.controller.base_controller import BaseController
+from pudink.client.frontend.scene_manager import SceneManager
+from pudink.client.model.world_state import WorldState
 from pudink.client.protocol.factory import ClientCallback, PudinkClientFactory
 
 
 from typing import Callable
 
 
-class LoginController:
-    def __init__(self, factory: PudinkClientFactory, scene_manager) -> None:
-        self.factory = factory
-        self.scene_manager = scene_manager
+class LoginController(BaseController):
+    def __init__(
+        self,
+        factory: PudinkClientFactory,
+        scene_manager: SceneManager,
+        world_state: WorldState,
+    ) -> None:
+        super().__init__(factory, scene_manager)
+        self.world_state = world_state
 
     def login(
         self,
@@ -27,10 +35,6 @@ class LoginController:
         )
         self.factory.connect()
 
-    def switch_screen(self, scene):
-        self.factory.set_scene(scene)
-        self.scene_manager.switch_to_scene(scene)
-
     def _on_success(
         self,
         renderer_on_success: Callable[[str], None],
@@ -41,6 +45,7 @@ class LoginController:
         renderer_on_success(data)
 
     def _on_initialization(self, data):
-        print(data)
         print("initialized")
-        self.switch_screen("main")
+        print(data)
+        self.world_state.update(data)
+        self.switch_screen("world")

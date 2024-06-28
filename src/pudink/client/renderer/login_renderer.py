@@ -33,9 +33,6 @@ class LoginRenderer:
         )
         self.frame = pyglet.gui.Frame(self.window)
 
-        pyglet.resource.path = ["assets/ui"]
-        pyglet.resource.reindex()
-
         depressed = pyglet.resource.image("blue_button04.png")
         pressed = pyglet.resource.image("blue_button05.png")
         hover = pyglet.resource.image("blue_button05.png")
@@ -75,16 +72,8 @@ class LoginRenderer:
         self.batch.draw()
 
     def on_key_press(self, symbol, modifiers) -> None:
-        if (
-            symbol == pyglet.window.key.ENTER
-            and self.username_entry.value
-            and self.password_entry.value
-        ):
-            data = {"name": self.name, "password": self.password_entry.get_password()}
-            print(data)
-            self.login_controller.login(
-                data, self._on_connecting, self._on_success, self._on_fail
-            )
+        if symbol == pyglet.window.key.ENTER:
+            self._login_handler()
 
     def _on_connecting(self, data: str):
         print(data)

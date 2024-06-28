@@ -6,10 +6,12 @@ from twisted.internet.error import ReactorNotRunning
 from pyglet.window import Window
 
 from pudink.client.controller.login_controller import LoginController
+from pudink.client.controller.world_controller import WorldController
+from pudink.client.model.world_state import WorldState
 from pudink.client.protocol.factory import PudinkClientFactory
 from pudink.client.frontend.scene_manager import SceneManager
 from pudink.client.renderer.login_renderer import LoginRenderer
-from pudink.client.frontend.main_scene import MainScene
+from pudink.client.renderer.world_renderer import WorldRenderer
 
 
 class PudinkGame:
@@ -30,18 +32,24 @@ class PudinkGame:
         self._window = window
         pyglet.gl.glClearColor(0.8, 0.8, 0.8, 1.0)
 
-        self._scene_manager = SceneManager(self._window)
+        scene_manager = SceneManager(self._window)
 
-        self._window.on_draw = self._scene_manager.on_draw
-        self._window.on_key_press = self._scene_manager.on_key_press
+        self._window.on_draw = scene_manager.on_draw
+        self._window.on_key_press = scene_manager.on_key_press
         self._window.on_close = self.stop
 
-        login_controller = LoginController(self._factory, self._scene_manager)
-        login_scene = LoginRenderer(self._window, login_controller)
-        main_scene = MainScene(self._window, self._scene_manager)
+        pyglet.resource.path = ["assets", "assets/ui"]
+        pyglet.resource.reindex()
 
-        self._scene_manager.register_scene("login", login_scene)
-        self._scene_manager.register_scene("main", main_scene)
+        world_state = WorldState()
+
+        login_controller = LoginController(self._factory, scene_manager, world_state)
+        login_scene = LoginRenderer(self._window, login_controller)
+        world_controller = WorldController(self._factory, scene_manager, world_state)
+        world_scene = WorldRenderer(self._window, world_controller)
+
+        scene_manager.register_scene("login", login_scene)
+        scene_manager.register_scene("world", world_scene)
 
         login_controller.switch_screen("login")
 

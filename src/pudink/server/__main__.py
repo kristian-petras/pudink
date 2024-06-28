@@ -26,6 +26,7 @@ class PudinkServer(protocol.Protocol):
             self.name = data.decode()
             self.state = PlayerState.INITIALIZED
             print(f"Player {self.name} initialized")
+            self.transport.write("test".encode())
             # send a message to all other clients
             for c in self.factory.clients:
                 if c != self:
