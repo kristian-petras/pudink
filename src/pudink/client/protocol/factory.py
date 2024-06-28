@@ -9,12 +9,17 @@ class PudinkClientFactory(protocol.ClientFactory):
 
     def __init__(self):
         self.client = None
+        self.registeredCallbacks = []
 
     def clientConnectionFailed(self, connector, reason):
         print("Connection failed - goodbye!")
 
     def clientConnectionLost(self, connector, reason):
         print("Connection lost - goodbye!")
+
+    def startedConnecting(self, connector):
+        for callback in self.registeredCallbacks:
+            callback()
 
     def buildProtocol(self, addr):
         p = PudinkClient()

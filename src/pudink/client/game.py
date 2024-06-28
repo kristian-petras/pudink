@@ -34,7 +34,9 @@ class PudinkGame:
         self._window.on_key_press = self._scene_manager.on_key_press
         self._window.on_close = self.stop
 
-        login_scene = LoginScene(self._window, self._scene_manager, self._connect)
+        login_scene = LoginScene(
+            self._window, self._scene_manager, self._connect, self._factory
+        )
         main_scene = MainScene(self._window, self._scene_manager)
 
         self._scene_manager.register_scene("login", login_scene)
