@@ -9,7 +9,6 @@ class WorldRenderer:
     def __init__(self, window: Window, world_controller: WorldController) -> None:
         self.window = window
         self.world_controller = world_controller
-
         self.batch = pyglet.graphics.Batch()
 
         self.character_image = pyglet.resource.image("character.png")
@@ -18,7 +17,11 @@ class WorldRenderer:
         self.world_controller.on_player_leave_callback = self.on_player_leave
         self.world_controller.on_player_update_callback = self.on_player_update
 
+        self.chat_entry = pyglet.gui.TextEntry("", 20, 20, 200, batch=self.batch)
+        self.chat_entry.set_handler("on_commit", self._chat_handler)
+
         self.players = {}
+        self.chat_bubbles = {}
         self.keys = key.KeyStateHandler()
 
     def on_draw(self) -> None:
@@ -32,7 +35,33 @@ class WorldRenderer:
     def before_scene_switch(self):
         self.window.remove_handlers()
 
+    def _chat_handler(self, text):
+        # self.world_controller.send_chat_message(text)
+        player = self.world_controller.get_current_player()
+        if player.id not in self.chat_bubbles:
+            self.chat_bubbles[player.id] = []
+
+        label = pyglet.text.Label(
+            text,
+            x=player.x,
+            y=player.y
+            + 50
+            + 20 * len(self.chat_bubbles[player.id]),  # Stack the chat bubbles
+            batch=self.batch,
+            color=(0, 0, 0, 255),
+        )
+
+        self.chat_bubbles[player.id].append(label)
+        # Remove the chat bubble after 5 seconds
+        pyglet.clock.schedule_once(lambda _: self.pop_chat_bubble(player.id), 5)
+        self.chat_entry.value = ""
+
+    def pop_chat_bubble(self, player_id):
+        if player_id in self.chat_bubbles:
+            self.chat_bubbles[player_id].pop(0).delete()
+
     def after_scene_switch(self, previous_scene):
+        self.window.push_handlers(self.chat_entry)
         self.window.push_handlers(self.keys)
         players = self.world_controller.get_players()
         for player in players.values():
@@ -43,6 +72,9 @@ class WorldRenderer:
                 self.on_player_update(update)
 
     def move_player(self, dt) -> None:
+        if self.chat_entry.focus:
+            return
+
         current_player = self.world_controller.get_current_player()
         if current_player is None:
             return
@@ -77,6 +109,12 @@ class WorldRenderer:
         active_player = self.players[current_player.id]
         active_player.x += dx * movement_speed
         active_player.y += dy * movement_speed
+
+        # Update the chat bubbles
+        if current_player.id in self.chat_bubbles:
+            for bubble in self.chat_bubbles[current_player.id]:
+                bubble.x += dx * movement_speed
+                bubble.y += dy * movement_speed
 
         # Update the player's location
         self.world_controller.move_player(active_player.x, active_player.y)
