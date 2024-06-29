@@ -1,6 +1,7 @@
 import json
 from pudink.common.model import (
     Character,
+    ChatMessage,
     Credentials,
     ConnectionError,
     NewAccount,
@@ -25,6 +26,7 @@ class MessageTranslator:
             "player": MessageTranslator._decode_player,
             "player_update": MessageTranslator._decode_player_update,
             "player_snapshot": MessageTranslator._decode_player_snapshot,
+            "chat_message": MessageTranslator._decode_chat_message,
         }
         return decode_map[message["type"]](message)
 
@@ -87,6 +89,13 @@ class MessageTranslator:
         return Character(
             message["head_type"],
             message["body_type"],
+        )
+
+    @staticmethod
+    def _decode_chat_message(message: dict) -> ChatMessage:
+        return ChatMessage(
+            message["player_id"],
+            message["message"],
         )
 
     @staticmethod
@@ -163,6 +172,14 @@ class MessageTranslator:
         }
 
     @staticmethod
+    def _encode_chat_message(message: ChatMessage) -> dict:
+        return {
+            "type": "chat_message",
+            "player_id": message.player_id,
+            "message": message.message,
+        }
+
+    @staticmethod
     def encode(message: any) -> bytes:
         encode_map = {
             ConnectionError: MessageTranslator._encode_error,
@@ -173,5 +190,6 @@ class MessageTranslator:
             PlayerDisconnect: MessageTranslator._encode_player_disconnect,
             PlayerUpdate: MessageTranslator._encode_player_update,
             PlayerSnapshot: MessageTranslator._encode_player_snapshot,
+            ChatMessage: MessageTranslator._encode_chat_message,
         }
         return json.dumps(encode_map[type(message)](message)).encode("utf-8")

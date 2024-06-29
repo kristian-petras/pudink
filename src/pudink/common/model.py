@@ -64,3 +64,10 @@ class PlayerUpdate:
 class PlayerSnapshot:
     current_player_id: int
     players: list[Player]
+
+
+# Sent from client to server when a chat message is sent
+@dataclass
+class ChatMessage:
+    player_id: int
+    message: str
