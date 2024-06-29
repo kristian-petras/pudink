@@ -1,7 +1,7 @@
 import pyglet
 
 from pudink.client.controller.world_controller import WorldController
-from pudink.common.model import Player, PlayerDisconnect, PlayerUpdate
+from pudink.common.model import ChatMessage, Player, PlayerDisconnect, PlayerUpdate
 from pyglet.window import Window, key
 
 
@@ -16,6 +16,7 @@ class WorldRenderer:
         self.world_controller.on_player_join_callback = self.on_player_join
         self.world_controller.on_player_leave_callback = self.on_player_leave
         self.world_controller.on_player_update_callback = self.on_player_update
+        self.world_controller.on_chat_message_callback = self.on_chat_message
 
         self.chat_entry = pyglet.gui.TextEntry("", 20, 20, 200, batch=self.batch)
         self.chat_entry.set_handler("on_commit", self._chat_handler)
@@ -36,29 +37,16 @@ class WorldRenderer:
         self.window.remove_handlers()
 
     def _chat_handler(self, text):
-        # self.world_controller.send_chat_message(text)
+        self.world_controller.send_chat_message(text)
         player = self.world_controller.get_current_player()
-        if player.id not in self.chat_bubbles:
-            self.chat_bubbles[player.id] = []
-
-        label = pyglet.text.Label(
-            text,
-            x=player.x,
-            y=player.y
-            + 50
-            + 20 * len(self.chat_bubbles[player.id]),  # Stack the chat bubbles
-            batch=self.batch,
-            color=(0, 0, 0, 255),
-        )
-
-        self.chat_bubbles[player.id].append(label)
-        # Remove the chat bubble after 5 seconds
-        pyglet.clock.schedule_once(lambda _: self.pop_chat_bubble(player.id), 5)
+        self._register_chat_bubble(player, text)
         self.chat_entry.value = ""
 
     def pop_chat_bubble(self, player_id):
         if player_id in self.chat_bubbles:
             self.chat_bubbles[player_id].pop(0).delete()
+            player = self.players[player_id]
+            self._move_chat_bubbles(player_id, player.x, player.y)
 
     def after_scene_switch(self, previous_scene):
         self.window.push_handlers(self.chat_entry)
@@ -111,10 +99,7 @@ class WorldRenderer:
         active_player.y += dy * movement_speed
 
         # Update the chat bubbles
-        if current_player.id in self.chat_bubbles:
-            for bubble in self.chat_bubbles[current_player.id]:
-                bubble.x += dx * movement_speed
-                bubble.y += dy * movement_speed
+        self._move_chat_bubbles(current_player.id, active_player.x, active_player.y)
 
         # Update the player's location
         self.world_controller.move_player(active_player.x, active_player.y)
@@ -135,3 +120,31 @@ class WorldRenderer:
     def on_player_update(self, player: PlayerUpdate):
         self.players[player.id].x = player.x
         self.players[player.id].y = player.y
+        self._move_chat_bubbles(player.id, player.x, player.y)
+
+    def on_chat_message(self, chat_message: ChatMessage):
+        player = self.world_controller.get_player(chat_message.player_id)
+        self._register_chat_bubble(player, chat_message.message)
+
+    def _register_chat_bubble(self, player: Player, message: str):
+        if player.id not in self.chat_bubbles:
+            self.chat_bubbles[player.id] = []
+
+        chat_bubbles = self.chat_bubbles[player.id]
+        label = pyglet.text.Label(
+            message,
+            x=player.x,
+            y=player.y + 50 + 20 * len(chat_bubbles),
+            batch=self.batch,
+            color=(0, 0, 0, 255),
+        )
+
+        self.chat_bubbles[player.id].append(label)
+        # Remove the chat bubble after 5 seconds
+        pyglet.clock.schedule_once(lambda _: self.pop_chat_bubble(player.id), 5)
+
+    def _move_chat_bubbles(self, player_id, x, y):
+        if player_id in self.chat_bubbles:
+            for index, bubble in enumerate(self.chat_bubbles[player_id]):
+                bubble.x = x
+                bubble.y = y + 50 + 20 * index
