@@ -41,8 +41,7 @@ class MessageTranslator:
         return NewAccount(
             message["name"],
             message["password"],
-            character.head_type,
-            character.body_type,
+            character,
         )
 
     @staticmethod
@@ -50,8 +49,7 @@ class MessageTranslator:
         character = MessageTranslator._decode_character(message["character"])
         return Player(
             message["id"],
-            character.head_type,
-            character.body_type,
+            character,
         )
 
     @staticmethod
@@ -63,8 +61,7 @@ class MessageTranslator:
         character = MessageTranslator._decode_character(message["character"])
         return Player(
             message["id"],
-            character.head_type,
-            character.body_type,
+            character,
             message["x"],
             message["y"],
         )
@@ -139,9 +136,9 @@ class MessageTranslator:
         return {
             "type": "player",
             "id": message.id,
-            "head_type": message.head_type,
-            "body_type": message.body_type,
             "character": character,
+            "x": message.x,
+            "y": message.y,
         }
 
     @staticmethod

@@ -6,7 +6,7 @@ from pudink.client.protocol.factory import ClientCallback, PudinkClientFactory
 
 from typing import Callable
 
-from pudink.common.model import Credentials, ConnectionError
+from pudink.common.model import Credentials, ConnectionError, PlayerSnapshot
 
 
 class LoginController(BaseController):
@@ -67,8 +67,13 @@ class LoginController(BaseController):
     ) -> None:
         if type(data) == ConnectionError:
             on_fail(data)
-            return
-        on_success(data)
-        self.world_state.initialize_world(data)
-        print(f"Switching to world screen. World state initialized. {data}")
-        self.switch_screen("world")
+        elif type(data) == PlayerSnapshot:
+            success = f"Switching to world screen, players online: {len(data.players)}"
+            print(success)
+            on_success(success)
+            self.world_state.initialize_world(data)
+            self.switch_screen("world")
+        else:
+            fail = f"Received unexpected message: {data}"
+            print(fail)
+            on_fail(ConnectionError(fail))

@@ -44,6 +44,6 @@ class WorldState:
 
     def initialize_world(self, snapshot: PlayerSnapshot):
         """Initializes the game world with a snapshot."""
-        for player in snapshot.players.values():
+        for player in snapshot.players:
             self.players[player.id] = player
         self.current_player_id = snapshot.current_player_id

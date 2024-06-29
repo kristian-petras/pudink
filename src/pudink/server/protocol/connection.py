@@ -38,9 +38,7 @@ class PudinkConnection(protocol.Protocol):
             if player is None:
                 return
 
-            self.player = Player(
-                player.id, player.head_type, player.body_type, 400, 400
-            )
+            self.player = Player(player.id, player.character, 400, 400)
 
             if self.player not in self.factory.players:
                 self.factory.players.append(self.player)
