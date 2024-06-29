@@ -6,6 +6,7 @@ from pudink.common.model import (
     NewAccount,
     Player,
     PlayerDisconnect,
+    PlayerInitialization,
     PlayerSnapshot,
     PlayerUpdate,
 )
@@ -45,9 +46,9 @@ class MessageTranslator:
         )
 
     @staticmethod
-    def _decode_player_initialization(message: dict) -> Player:
+    def _decode_player_initialization(message: dict) -> PlayerInitialization:
         character = MessageTranslator._decode_character(message["character"])
-        return Player(
+        return PlayerInitialization(
             message["id"],
             character,
         )
@@ -118,7 +119,7 @@ class MessageTranslator:
         }
 
     @staticmethod
-    def _encode_player_initialization(message: Player) -> dict:
+    def _encode_player_initialization(message: PlayerInitialization) -> dict:
         character = MessageTranslator._encode_character(message.character)
         return {
             "type": "player_initialization",
@@ -167,7 +168,8 @@ class MessageTranslator:
             ConnectionError: MessageTranslator._encode_error,
             Credentials: MessageTranslator._encode_credentials,
             NewAccount: MessageTranslator._encode_new_account,
-            Player: MessageTranslator._encode_player_initialization,
+            Player: MessageTranslator._encode_player,
+            PlayerInitialization: MessageTranslator._encode_player_initialization,
             PlayerDisconnect: MessageTranslator._encode_player_disconnect,
             PlayerUpdate: MessageTranslator._encode_player_update,
             PlayerSnapshot: MessageTranslator._encode_player_snapshot,

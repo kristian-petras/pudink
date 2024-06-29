@@ -13,8 +13,8 @@ class BaseController:
         self.factory.set_scene(scene)
         self.scene_manager.switch_to_scene(scene)
 
-    def send_message(self, input_data: dict[str, str]):
-        self.factory.client.send_message(input_data)
+    def send_message(self, data: any) -> None:
+        self.factory.client.send_message(data)
 
     def register_callback(
         self, callback: ClientCallback, function: Callable[[str], None]

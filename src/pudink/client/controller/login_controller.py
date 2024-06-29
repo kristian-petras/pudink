@@ -50,13 +50,18 @@ class LoginController(BaseController):
         on_success: Callable[[str], None],
         on_fail: Callable[[ConnectionError], None],
     ) -> None:
+        if not self.factory.connected:
+            self.factory.connect()
+            if not self.factory.connected:
+                return
+
         self.factory.registerCallback(
             ClientCallback.DATA_RECEIVED,
             lambda response: self._on_login_response(response, on_success, on_fail),
             self.scene,
         )
         credentials = Credentials(username, password)
-        self.factory.client.send_message(credentials)
+        self.send_message(credentials)
 
     # After client sends credentials, receive initialization data from server
     def _on_login_response(
@@ -70,6 +75,7 @@ class LoginController(BaseController):
         elif type(data) == PlayerSnapshot:
             success = f"Switching to world screen, players online: {len(data.players)}"
             print(success)
+            print(data)
             on_success(success)
             self.world_state.initialize_world(data)
             self.switch_screen("world")

@@ -40,7 +40,7 @@ class WorldController(BaseController):
             return
         update = PlayerUpdate(player.id, new_x, new_y)
         self.player_update(update)
-        self.factory.client.send_message(update)
+        self.send_message(update)
 
     def _on_update(self, message: any) -> None:
         if type(message) == PlayerDisconnect:

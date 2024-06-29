@@ -84,6 +84,5 @@ class WorldRenderer:
         self.players.pop(disconnect.id)
 
     def on_player_update(self, player: PlayerUpdate):
-        print(f"Player {player.id} updated.")
         self.players[player.id].x = player.x
         self.players[player.id].y = player.y

@@ -4,7 +4,7 @@ import json
 
 from twisted.internet import protocol
 
-from pudink.common.model import ConnectionError
+from pudink.common.model import ConnectionError, PlayerUpdate
 from pudink.common.translator import MessageTranslator
 
 
@@ -27,7 +27,6 @@ class PudinkClient(protocol.Protocol):
         self.factory._process_callback(ClientCallback.CONNECTION_SUCCESS, "Connected!")
 
     def dataReceived(self, data):
-        print(f"Received data: {data}")
         message = MessageTranslator.decode(data)
         self.factory._process_callback(ClientCallback.DATA_RECEIVED, message)
 
@@ -36,7 +35,8 @@ class PudinkClient(protocol.Protocol):
         self.factory._process_callback(ClientCallback.CONNECTION_FAILED, error)
 
     def send_message(self, message: any) -> None:
-        print(f"Sending message: {message}")
+        if type(message) != PlayerUpdate:
+            print(f"Sending message: {message}")
         data = MessageTranslator.encode(message)
         self.transport.write(data)
 
@@ -61,10 +61,12 @@ class PudinkClientFactory(protocol.ClientFactory):
     def clientConnectionFailed(self, connector, reason):
         error = ConnectionError(reason.getErrorMessage())
         self._process_callback(ClientCallback.CONNECTION_FAILED, error)
+        self.client = None
 
     def clientConnectionLost(self, connector, reason):
         error = ConnectionError(reason.getErrorMessage())
         self._process_callback(ClientCallback.CONNECTION_FAILED, error)
+        self.client = None
 
     def startedConnecting(self, connector):
         self._process_callback(ClientCallback.STARTED_CONNECTING, "Connecting")
@@ -91,6 +93,7 @@ class PudinkClientFactory(protocol.ClientFactory):
             self.registeredCallbacks[event] = {scene: callback}
 
     def buildProtocol(self, addr):
+        print(f"Building protocol for {addr}")
         client = PudinkClient(self.registeredCallbacks)
         client.factory = self
         if self.client is not None:
