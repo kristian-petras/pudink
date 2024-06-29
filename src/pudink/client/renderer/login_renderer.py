@@ -8,7 +8,6 @@ class LoginRenderer:
     def __init__(self, window: pyglet.window.Window, login: LoginController) -> None:
         self.window = window
         self.login_controller = login
-        self.counter = 0
         self.batch = pyglet.graphics.Batch()
         self.title = pyglet.text.Label(
             "Pudink",
