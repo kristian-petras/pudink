@@ -26,22 +26,34 @@ class PudinkConnection(protocol.Protocol):
 
     def connectionLost(self, reason):
         print("Lost a client!")
-        self.factory.clients.remove(self)
         if self.player is None:
             return
+        self.factory.clients.remove(self)
+        del self.factory.players[self.player.id]
         self._broadcast_disconnect_player()
+        self.player = None
 
     def dataReceived(self, data):
         if self.player is None:
             player = self._authenticate_player(data)
 
             if player is None:
+                error = MessageTranslator.encode(ConnectionError("Wrong credentials!"))
+                self.transport.write(error)
                 return
 
+            if player.id in self.factory.players:
+                error = MessageTranslator.encode(
+                    ConnectionError("Player already connected!")
+                )
+                self.transport.write(error)
+                return
+
+            print(f"Player with id {player.id} initialized")
             self.player = Player(player.id, player.character, 400, 400)
 
-            if self.player not in self.factory.players:
-                self.factory.players.append(self.player)
+            if self.player.id not in self.factory.players:
+                self.factory.players[self.player.id] = self.player
 
             self._send_player_snapshot()
             self._broadcast_new_player()
@@ -59,13 +71,11 @@ class PudinkConnection(protocol.Protocol):
             error = MessageTranslator.encode(ConnectionError("Wrong credentials!"))
             self.transport.write(error)
             return None
-
-        print(f"Player {credentials.name} with id {player.id} initialized")
         return player
 
     def _send_player_snapshot(self) -> None:
         playerSnapshot = MessageTranslator.encode(
-            PlayerSnapshot(self.player.id, self.factory.players)
+            PlayerSnapshot(self.player.id, self.factory.players.values())
         )
         self.transport.write(playerSnapshot)
 

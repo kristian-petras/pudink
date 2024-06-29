@@ -7,7 +7,7 @@ from twisted.internet import protocol
 class PudinkServer(protocol.ServerFactory):
     def __init__(self):
         self.clients = []
-        self.players = []
+        self.players = {}
 
     def buildProtocol(self, addr):
         server_protocol = PudinkConnection()
