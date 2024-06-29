@@ -1,3 +1,4 @@
+from pudink.client.frontend.scene_manager import SceneManager
 from pudink.client.protocol.factory import ClientCallback, PudinkClientFactory
 
 
@@ -5,7 +6,9 @@ from typing import Callable
 
 
 class BaseController:
-    def __init__(self, factory: PudinkClientFactory, scene_manager) -> None:
+    def __init__(
+        self, factory: PudinkClientFactory, scene_manager: SceneManager
+    ) -> None:
         self.factory = factory
         self.scene_manager = scene_manager
 

@@ -20,8 +20,6 @@ class WorldRenderer:
 
         self.players = {}
         self.keys = key.KeyStateHandler()
-        self.window.push_handlers(self.keys)
-        # pyglet.clock.schedule_interval(self.update, 1 / 60)
 
     def on_draw(self) -> None:
         self.window.clear()
@@ -30,6 +28,12 @@ class WorldRenderer:
 
     def on_key_press(self, symbol, modifiers):
         pass
+
+    def before_scene_switch(self):
+        self.window.remove_handlers()
+
+    def after_scene_switch(self, previous_scene):
+        self.window.push_handlers(self.keys)
 
     def move_player(self, dt) -> None:
         current_player = self.world_controller.get_current_player()

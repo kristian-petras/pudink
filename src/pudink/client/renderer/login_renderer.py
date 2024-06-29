@@ -64,9 +64,6 @@ class LoginRenderer:
         self.password_entry = PasswordTextEntry("", 400, 300, 150, batch=self.batch)
         self.password_entry.set_handler("on_commit", self.login_handler)
 
-        self.window.push_handlers(self.username_entry)
-        self.window.push_handlers(self.password_entry)
-
         self.login_controller.connect(
             self._on_connecting, self._on_success, self._on_fail
         )
@@ -78,6 +75,19 @@ class LoginRenderer:
     def on_key_press(self, symbol, modifiers) -> None:
         if symbol == pyglet.window.key.ENTER:
             self._login_handler()
+
+    def before_scene_switch(self):
+        self.window.remove_handlers()
+        self.password_entry.enabled = False
+        self.username_entry.enabled = False
+        self.pushbutton.enabled = False
+
+    def after_scene_switch(self, previous_scene):
+        self.window.push_handlers(self.username_entry)
+        self.window.push_handlers(self.password_entry)
+        self.password_entry.enabled = True
+        self.username_entry.enabled = True
+        self.pushbutton.enabled = True
 
     def _on_connecting(self, data: str):
         print(data)
