@@ -40,6 +40,9 @@ class PudinkConnection(protocol.Protocol):
             self._send_player_snapshot()
             self._broadcast_new_player()
         else:
+            update = MessageTranslator.decode(data)
+            self.player.x = update.x
+            self.player.y = update.y
             self._broadcast_message(data)
 
     def _authenticate_player(self, data) -> Optional[Player]:
@@ -61,12 +64,12 @@ class PudinkConnection(protocol.Protocol):
         self.transport.write(playerSnapshot)
 
     def _broadcast_new_player(self) -> None:
-        new_player_message = MessageTranslator.encode(self.player)
-        self._broadcast_message(new_player_message)
+        new_player = MessageTranslator.encode(self.player)
+        self._broadcast_message(new_player)
 
     def _broadcast_disconnect_player(self) -> None:
-        playerDisconnect = MessageTranslator.encode(PlayerDisconnect(self.player.id))
-        self._broadcast_message(playerDisconnect)
+        disconnect = MessageTranslator.encode(PlayerDisconnect(self.player.id))
+        self._broadcast_message(disconnect)
 
     def _broadcast_message(self, message) -> None:
         print(f"Broadcasting message {message}")
