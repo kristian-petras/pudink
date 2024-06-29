@@ -4,6 +4,7 @@ from twisted.internet import protocol, reactor
 import os
 
 from pudink.common.model import (
+    ChatMessage,
     ConnectionError,
     Player,
     PlayerDisconnect,
@@ -67,12 +68,14 @@ class PudinkConnection(protocol.Protocol):
             self.is_connected = True
         else:
             update = MessageTranslator.decode(data)
-            if type(update) != PlayerUpdate:
+            if type(update) == PlayerUpdate:
+                self.player.x = update.x
+                self.player.y = update.y
+                self._broadcast_message(data)
+            elif type(update) == ChatMessage:
+                self._broadcast_message(data)
+            else:
                 print(f"Received unexpected message: {update}")
-                return
-            self.player.x = update.x
-            self.player.y = update.y
-            self._broadcast_message(data)
 
     def _authenticate_player(self, data) -> Optional[PlayerInitialization]:
         credentials = MessageTranslator.decode(data)
