@@ -3,7 +3,12 @@ from typing import Optional
 from twisted.internet import protocol, reactor
 import os
 
-from pudink.common.model import Error, Player, PlayerDisconnect, PlayerSnapshot
+from pudink.common.model import (
+    ConnectionError,
+    Player,
+    PlayerDisconnect,
+    PlayerSnapshot,
+)
 from pudink.common.translator import MessageTranslator
 from pudink.server.database.connector import GameDatabase
 
@@ -50,7 +55,7 @@ class PudinkConnection(protocol.Protocol):
 
         player = self.db.authenticate_user(credentials.name, credentials.password)
         if not player:
-            error = MessageTranslator.encode(Error("Wrong credentials!"))
+            error = MessageTranslator.encode(ConnectionError("Wrong credentials!"))
             self.transport.write(error)
             return None
 

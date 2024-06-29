@@ -3,7 +3,7 @@ from dataclasses import dataclass
 
 # Sent from server to client when an error occurs
 @dataclass
-class Error:
+class ConnectionError:
     message: str
 
 
@@ -60,9 +60,3 @@ class PlayerUpdate:
 class PlayerSnapshot:
     current_player_id: int
     players: list[Player]
-
-
-@dataclass
-class Message:
-    type: str
-    data: any

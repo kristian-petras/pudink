@@ -83,9 +83,9 @@ class LoginRenderer:
         print(data)
         self.state.text = data
 
-    def _on_fail(self, data: str):
+    def _on_fail(self, data: ConnectionError):
         print(data)
-        self.state.text = data
+        self.state.text = data.message
 
     def login_handler(self, text):
         self._login_handler()
@@ -94,11 +94,10 @@ class LoginRenderer:
         if not self.username_entry.value or not self.password_entry.value:
             return
 
-        data = {
-            "username": self.username_entry.value,
-            "password": self.password_entry.get_password(),
-        }
-        print(data)
         self.login_controller.login(
-            data, self._on_connecting, self._on_success, self._on_fail
+            self.username_entry.value,
+            self.password_entry.get_password(),
+            self._on_connecting,
+            self._on_success,
+            self._on_fail,
         )

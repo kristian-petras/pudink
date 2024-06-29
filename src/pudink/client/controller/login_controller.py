@@ -1,12 +1,12 @@
 from pudink.client.controller.base_controller import BaseController
 from pudink.client.frontend.scene_manager import SceneManager
-from pudink.client.model.player import Player
 from pudink.client.model.world_state import WorldState
 from pudink.client.protocol.factory import ClientCallback, PudinkClientFactory
 
 
 from typing import Callable
-import json
+
+from pudink.common.model import Credentials, ConnectionError
 
 
 class LoginController(BaseController):
@@ -22,10 +22,11 @@ class LoginController(BaseController):
 
     def login(
         self,
-        input_data: dict[str, str],
+        username: str,
+        password: str,
         on_connecting: Callable[[str], None],
         on_success: Callable[[str], None],
-        on_fail: Callable[[str], None],
+        on_fail: Callable[[ConnectionError], None],
     ) -> None:
         self.factory.registerCallback(
             ClientCallback.STARTED_CONNECTING, on_connecting, self.scene
@@ -35,28 +36,34 @@ class LoginController(BaseController):
         )
         self.factory.registerCallback(
             ClientCallback.CONNECTION_SUCCESS,
-            lambda data: self._on_success(on_success, input_data, data),
+            lambda _: self._on_connection_success(username, password, on_success),
             self.scene,
         )
         self.factory.registerCallback(
-            ClientCallback.DATA_RECEIVED, self._on_initialization, self.scene
+            ClientCallback.DATA_RECEIVED,
+            lambda response: self._on_received_snapshot(response, on_fail),
+            self.scene,
         )
         self.factory.connect()
 
-    def _on_success(
+    # After client establishes connection, send credentials to server
+    def _on_connection_success(
         self,
+        username: str,
+        password: str,
         renderer_on_success: Callable[[str], None],
-        input_data: dict[str, str],
-        data: str,
-    ):
-        self.factory.client.send_message(input_data)
-        renderer_on_success(data)
+    ) -> None:
+        credentials = Credentials(username, password)
+        self.factory.client.send_message(credentials)
+        renderer_on_success("Connected!")
 
-    def _on_initialization(self, data):
-        print("initialized")
-        snapshot = json.loads(data)
-        self.world_state.current_player_id = snapshot["current_player_id"]
-        for player in snapshot["players"]:
-            p = Player(player["id"], player["username"], (player["x"], player["y"]))
-            self.world_state.upsert_player(p)
+    # After client sends credentials, receive initialization data from server
+    def _on_received_snapshot(
+        self, data: any, renderer_on_fail: Callable[[ConnectionError], None]
+    ) -> None:
+        if type(data) == ConnectionError:
+            renderer_on_fail(data)
+            return
+        self.world_state.initialize_world(data)
+        print(f"Switching to world screen. World state initialized. {data}")
         self.switch_screen("world")

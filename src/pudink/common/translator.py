@@ -1,7 +1,7 @@
 import json
 from pudink.common.model import (
     Credentials,
-    Error,
+    ConnectionError,
     NewAccount,
     Player,
     PlayerDisconnect,
@@ -27,8 +27,8 @@ class MessageTranslator:
         return decode_map[message["type"]](message)
 
     @staticmethod
-    def _decode_error(message: dict) -> Error:
-        return Error(message["message"])
+    def _decode_error(message: dict) -> ConnectionError:
+        return ConnectionError(message["message"])
 
     @staticmethod
     def _decode_credentials(message: dict) -> Credentials:
@@ -81,7 +81,7 @@ class MessageTranslator:
         return PlayerSnapshot(message["current_player_id"], players)
 
     @staticmethod
-    def _encode_error(message: Error) -> dict:
+    def _encode_error(message: ConnectionError) -> dict:
         return {"type": "error", "message": message.message}
 
     @staticmethod
@@ -149,7 +149,7 @@ class MessageTranslator:
     @staticmethod
     def encode(message: any) -> bytes:
         encode_map = {
-            Error: MessageTranslator._encode_error,
+            ConnectionError: MessageTranslator._encode_error,
             Credentials: MessageTranslator._encode_credentials,
             NewAccount: MessageTranslator._encode_new_account,
             Player: MessageTranslator._encode_player_initialization,

@@ -1,10 +1,12 @@
 import pyglet
 
 from pudink.client.controller.world_controller import WorldController
+from pudink.common.model import Player, PlayerDisconnect, PlayerUpdate
+from pyglet.window import Window, key
 
 
 class WorldRenderer:
-    def __init__(self, window: pyglet.window.Window, world_controller: WorldController):
+    def __init__(self, window: Window, world_controller: WorldController) -> None:
         self.window = window
         self.world_controller = world_controller
 
@@ -17,19 +19,19 @@ class WorldRenderer:
         self.world_controller.on_player_update_callback = self.on_player_update
 
         self.players = {}
-        self.keys = pyglet.window.key.KeyStateHandler()
+        self.keys = key.KeyStateHandler()
         self.window.push_handlers(self.keys)
         # pyglet.clock.schedule_interval(self.update, 1 / 60)
 
-    def on_draw(self):
+    def on_draw(self) -> None:
         self.window.clear()
         self.batch.draw()
-        self.update(1 / 60)
+        self.move_player(1 / 60)
 
     def on_key_press(self, symbol, modifiers):
         pass
 
-    def update(self, dt):
+    def move_player(self, dt) -> None:
         current_player = self.world_controller.get_current_player()
         if current_player is None:
             return
@@ -61,38 +63,27 @@ class WorldRenderer:
             dy /= length
 
         # Move the character
-        current_player_sprite = self.players[current_player.id]
-        current_player_sprite.x += dx * movement_speed
-        current_player_sprite.y += dy * movement_speed
+        active_player = self.players[current_player.id]
+        active_player.x += dx * movement_speed
+        active_player.y += dy * movement_speed
 
-        # Send the updated position to the server
-        update_message = {
-            "type": "player_update",
-            "data": {
-                "id": current_player.id,
-                "username": current_player.username,
-                "x": current_player_sprite.x,
-                "y": current_player_sprite.y,
-            },
-        }
-        self.world_controller.action(update_message)
+        # Update the player's location
+        self.world_controller.move_player(active_player.x, active_player.y)
 
-    def on_player_join(self, player):
-        print(f"Player {player.id} joined")
-        x, y = player.location
+    def on_player_join(self, player: Player):
+        print(f"Player {player.id} joined.")
         self.players[player.id] = pyglet.sprite.Sprite(
             self.character_image,
-            x=x,
-            y=y,
+            x=player.x,
+            y=player.y,
             batch=self.batch,
         )
 
-    def on_player_leave(self, player_id):
-        print(f"Player {player_id} left")
-        self.players.pop(player_id)
+    def on_player_leave(self, disconnect: PlayerDisconnect):
+        print(f"Player with id {disconnect.id} disconnected.")
+        self.players.pop(disconnect.id)
 
-    def on_player_update(self, player):
-        print(f"Player {player.id} updated")
-        x, y = player.location
-        self.players[player.id].x = x
-        self.players[player.id].y = y
+    def on_player_update(self, player: PlayerUpdate):
+        print(f"Player {player.id} updated.")
+        self.players[player.id].x = player.x
+        self.players[player.id].y = player.y
