@@ -1,5 +1,6 @@
 import json
 from pudink.common.model import (
+    Character,
     Credentials,
     ConnectionError,
     NewAccount,
@@ -36,19 +37,21 @@ class MessageTranslator:
 
     @staticmethod
     def _decode_new_account(message: dict) -> NewAccount:
+        character = MessageTranslator._decode_character(message["character"])
         return NewAccount(
             message["name"],
             message["password"],
-            message["head_type"],
-            message["body_type"],
+            character.head_type,
+            character.body_type,
         )
 
     @staticmethod
     def _decode_player_initialization(message: dict) -> Player:
+        character = MessageTranslator._decode_character(message["character"])
         return Player(
             message["id"],
-            message["head_type"],
-            message["body_type"],
+            character.head_type,
+            character.body_type,
         )
 
     @staticmethod
@@ -57,10 +60,11 @@ class MessageTranslator:
 
     @staticmethod
     def _decode_player(message: dict) -> Player:
+        character = MessageTranslator._decode_character(message["character"])
         return Player(
             message["id"],
-            message["head_type"],
-            message["body_type"],
+            character.head_type,
+            character.body_type,
             message["x"],
             message["y"],
         )
@@ -81,6 +85,20 @@ class MessageTranslator:
         return PlayerSnapshot(message["current_player_id"], players)
 
     @staticmethod
+    def _decode_character(message: dict) -> Character:
+        return Character(
+            message["head_type"],
+            message["body_type"],
+        )
+
+    @staticmethod
+    def _encode_character(message: Character) -> dict:
+        return {
+            "head_type": message.head_type,
+            "body_type": message.body_type,
+        }
+
+    @staticmethod
     def _encode_error(message: ConnectionError) -> dict:
         return {"type": "error", "message": message.message}
 
@@ -94,21 +112,21 @@ class MessageTranslator:
 
     @staticmethod
     def _encode_new_account(message: NewAccount) -> dict:
+        character = MessageTranslator._encode_character(message.character)
         return {
             "type": "new_account",
             "name": message.name,
             "password": message.password,
-            "head_type": message.head_type,
-            "body_type": message.body_type,
+            "character": character,
         }
 
     @staticmethod
     def _encode_player_initialization(message: Player) -> dict:
+        character = MessageTranslator._encode_character(message.character)
         return {
             "type": "player_initialization",
             "id": message.id,
-            "head_type": message.head_type,
-            "body_type": message.body_type,
+            "character": character,
         }
 
     @staticmethod
@@ -117,13 +135,13 @@ class MessageTranslator:
 
     @staticmethod
     def _encode_player(message: Player) -> dict:
+        character = MessageTranslator._encode_character(message.character)
         return {
             "type": "player",
             "id": message.id,
             "head_type": message.head_type,
             "body_type": message.body_type,
-            "x": message.x,
-            "y": message.y,
+            "character": character,
         }
 
     @staticmethod

@@ -7,6 +7,7 @@ from pudink.common.model import (
     ConnectionError,
     Player,
     PlayerDisconnect,
+    PlayerInitialization,
     PlayerSnapshot,
 )
 from pudink.common.translator import MessageTranslator
@@ -52,7 +53,7 @@ class PudinkConnection(protocol.Protocol):
             self.player.y = update.y
             self._broadcast_message(data)
 
-    def _authenticate_player(self, data) -> Optional[Player]:
+    def _authenticate_player(self, data) -> Optional[PlayerInitialization]:
         credentials = MessageTranslator.decode(data)
 
         player = self.db.authenticate_user(credentials.name, credentials.password)
@@ -61,7 +62,7 @@ class PudinkConnection(protocol.Protocol):
             self.transport.write(error)
             return None
 
-        print(f"Player {credentials.name} with id {self.player.id} initialized")
+        print(f"Player {credentials.name} with id {player.id} initialized")
         return player
 
     def _send_player_snapshot(self) -> None:

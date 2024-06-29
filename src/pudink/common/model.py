@@ -14,21 +14,26 @@ class Credentials:
     password: str
 
 
+# Describes the character's appearance
+@dataclass
+class Character:
+    head_type: int
+    body_type: int
+
+
 # Sent from client to server during account creation
 @dataclass
 class NewAccount:
     name: str
     password: str
-    head_type: int
-    body_type: int
+    character: Character
 
 
 # Used for initializing player data on origin client
 @dataclass
 class PlayerInitialization:
     id: int
-    head_type: int
-    body_type: int
+    character: Character
 
 
 # Used for informing other players that a player has disconnected
@@ -41,8 +46,7 @@ class PlayerDisconnect:
 @dataclass
 class Player:
     id: int
-    head_type: int
-    body_type: int
+    character: Character
     x: int
     y: int
 

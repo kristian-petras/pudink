@@ -2,9 +2,7 @@ import os
 import sqlite3
 from typing import Optional, List
 
-from pudink.common.model import PlayerInitialization
-from pudink.server.model.player import Player
-from pudink.server.model.character import Character
+from pudink.common.model import Character, PlayerInitialization
 
 
 class GameDatabase:
@@ -36,38 +34,30 @@ class GameDatabase:
 
     def register_user(
         self, username: str, password: str, character_id: int
-    ) -> Optional[Player]:
+    ) -> Optional[PlayerInitialization]:
         pass
 
     def authenticate_user(
         self, username: str, password: str
     ) -> Optional[PlayerInitialization]:
-        return self._get_user_by_credentials(username, password)
-
-    def _get_user_by_credentials(
-        self, username: str, password: str
-    ) -> Optional[Player]:
-        query = "SELECT id, username, character_id FROM players WHERE username=? AND password=?"
+        query = "SELECT id, character_id FROM players WHERE username=? AND password=?"
         params = (username, password)
         self._cursor.execute(query, params)
 
         if row := self._cursor.fetchone():
-            return Player(row[0], row[1], self._get_character_by_id(row[2]))
+            return PlayerInitialization(row[0], self._get_character_by_id(row[1]))
 
         return None
 
     def _get_character_by_id(self, character_id: int) -> Optional[Character]:
-        query = "SELECT id, head, body FROM characters WHERE id=?"
+        query = "SELECT head, body FROM characters WHERE id=?"
         params = (character_id,)
         self._cursor.execute(query, params)
 
         if row := self._cursor.fetchone():
-            return Character(row[0], row[1], row[2])
+            return Character(row[0], row[1])
 
         return None
-
-    def get_all_characters(self) -> List[Character]:
-        pass
 
     def close_connection(self) -> None:
         if self._cursor:
