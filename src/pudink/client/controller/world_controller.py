@@ -55,6 +55,9 @@ class WorldController(BaseController):
     def get_current_player(self) -> Optional[Player]:
         return self.world_state.get_current_player()
 
+    def get_players(self) -> dict[str, Player]:
+        return self.world_state.get_players()
+
     def player_join(self, new_player: Player) -> None:
         self.world_state.add_player(new_player)
         if self.on_player_join_callback:

@@ -32,7 +32,7 @@ class WorldState:
             raise ValueError(f"Player ID '{player_id}' does not exist.")
         return self.players[player_id]
 
-    def get_all_players(self) -> Dict[str, Player]:
+    def get_players(self) -> Dict[str, Player]:
         """Returns all players and their locations."""
         return self.players
 

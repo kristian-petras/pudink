@@ -34,6 +34,13 @@ class WorldRenderer:
 
     def after_scene_switch(self, previous_scene):
         self.window.push_handlers(self.keys)
+        players = self.world_controller.get_players()
+        for player in players.values():
+            if player.id not in self.players:
+                self.on_player_join(player)
+            else:
+                update = PlayerUpdate(player.id, player.x, player.y)
+                self.on_player_update(update)
 
     def move_player(self, dt) -> None:
         current_player = self.world_controller.get_current_player()
