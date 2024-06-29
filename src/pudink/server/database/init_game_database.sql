@@ -12,3 +12,6 @@ CREATE TABLE IF NOT EXISTS characters (
     body INTEGER NOT NULL CHECK (body <= 5),
     UNIQUE(head, body)
 );
+
+INSERT OR IGNORE INTO characters (head, body) VALUES (1, 1);
+INSERT OR IGNORE INTO players (username, password, character_id) VALUES ('test', 'test', 1);
