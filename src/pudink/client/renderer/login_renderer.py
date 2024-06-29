@@ -67,6 +67,10 @@ class LoginRenderer:
         self.window.push_handlers(self.username_entry)
         self.window.push_handlers(self.password_entry)
 
+        self.login_controller.connect(
+            self._on_connecting, self._on_success, self._on_fail
+        )
+
     def on_draw(self) -> None:
         self.window.clear()
         self.batch.draw()
@@ -87,7 +91,7 @@ class LoginRenderer:
         print(data)
         self.state.text = data.message
 
-    def login_handler(self, text):
+    def login_handler(self, _):
         self._login_handler()
 
     def _login_handler(self):
@@ -97,7 +101,6 @@ class LoginRenderer:
         self.login_controller.login(
             self.username_entry.value,
             self.password_entry.get_password(),
-            self._on_connecting,
             self._on_success,
             self._on_fail,
         )

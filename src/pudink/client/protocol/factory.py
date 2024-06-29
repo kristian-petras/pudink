@@ -24,7 +24,7 @@ class PudinkClient(protocol.Protocol):
         self.registered_callbacks = registeredCallbacks
 
     def connectionMade(self):
-        self.factory._process_callback(ClientCallback.CONNECTION_SUCCESS, None)
+        self.factory._process_callback(ClientCallback.CONNECTION_SUCCESS, "Connected!")
 
     def dataReceived(self, data):
         print(f"Received data: {data}")
@@ -59,19 +59,17 @@ class PudinkClientFactory(protocol.ClientFactory):
         self.connected = False
 
     def clientConnectionFailed(self, connector, reason):
-        self._process_callback(
-            ClientCallback.CONNECTION_FAILED, reason.getErrorMessage()
-        )
+        error = ConnectionError(reason.getErrorMessage())
+        self._process_callback(ClientCallback.CONNECTION_FAILED, error)
 
     def clientConnectionLost(self, connector, reason):
-        self._process_callback(
-            ClientCallback.CONNECTION_FAILED, reason.getErrorMessage()
-        )
+        error = ConnectionError(reason.getErrorMessage())
+        self._process_callback(ClientCallback.CONNECTION_FAILED, error)
 
     def startedConnecting(self, connector):
         self._process_callback(ClientCallback.STARTED_CONNECTING, "Connecting")
 
-    def _process_callback(self, event: ClientCallback, data: str):
+    def _process_callback(self, event: ClientCallback, data: any) -> None:
         if event == ClientCallback.STARTED_CONNECTING:
             self.connecting = True
             self.connected = False

@@ -20,50 +20,55 @@ class LoginController(BaseController):
         self.world_state = world_state
         self.scene = "login"
 
-    def login(
+    def connect(
         self,
-        username: str,
-        password: str,
         on_connecting: Callable[[str], None],
         on_success: Callable[[str], None],
         on_fail: Callable[[ConnectionError], None],
     ) -> None:
         self.factory.registerCallback(
-            ClientCallback.STARTED_CONNECTING, on_connecting, self.scene
-        )
-        self.factory.registerCallback(
-            ClientCallback.CONNECTION_FAILED, on_fail, self.scene
-        )
-        self.factory.registerCallback(
-            ClientCallback.CONNECTION_SUCCESS,
-            lambda _: self._on_connection_success(username, password, on_success),
+            ClientCallback.STARTED_CONNECTING,
+            on_connecting,
             self.scene,
         )
         self.factory.registerCallback(
-            ClientCallback.DATA_RECEIVED,
-            lambda response: self._on_received_snapshot(response, on_fail),
+            ClientCallback.CONNECTION_FAILED,
+            on_fail,
+            self.scene,
+        )
+        self.factory.registerCallback(
+            ClientCallback.CONNECTION_SUCCESS,
+            on_success,
             self.scene,
         )
         self.factory.connect()
 
-    # After client establishes connection, send credentials to server
-    def _on_connection_success(
+    def login(
         self,
         username: str,
         password: str,
-        renderer_on_success: Callable[[str], None],
+        on_success: Callable[[str], None],
+        on_fail: Callable[[ConnectionError], None],
     ) -> None:
+        self.factory.registerCallback(
+            ClientCallback.DATA_RECEIVED,
+            lambda response: self._on_login_response(response, on_success, on_fail),
+            self.scene,
+        )
         credentials = Credentials(username, password)
         self.factory.client.send_message(credentials)
-        renderer_on_success("Connected!")
 
     # After client sends credentials, receive initialization data from server
-    def _on_received_snapshot(
-        self, data: any, renderer_on_fail: Callable[[ConnectionError], None]
+    def _on_login_response(
+        self,
+        data: any,
+        on_success: Callable[[str], None],
+        on_fail: Callable[[ConnectionError], None],
     ) -> None:
         if type(data) == ConnectionError:
-            renderer_on_fail(data)
+            on_fail(data)
             return
+        on_success(data)
         self.world_state.initialize_world(data)
         print(f"Switching to world screen. World state initialized. {data}")
         self.switch_screen("world")

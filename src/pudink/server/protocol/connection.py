@@ -26,6 +26,8 @@ class PudinkConnection(protocol.Protocol):
     def connectionLost(self, reason):
         print("Lost a client!")
         self.factory.clients.remove(self)
+        if self.player is None:
+            return
         self._broadcast_disconnect_player()
 
     def dataReceived(self, data):
