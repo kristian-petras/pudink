@@ -70,5 +70,6 @@ class WorldController(BaseController):
         if self.on_player_update_callback:
             self.on_player_update_callback(update)
 
-    def _on_disconnect(self) -> None:
+    def _on_disconnect(self, data) -> None:
+        print(f"Disconnected from server with message: {data}")
         self.switch_screen("login")
