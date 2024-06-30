@@ -4,7 +4,7 @@ from pyglet.window import Window
 
 
 def main():
-    game = PudinkGame(window=Window(800, 600, "Pudink"), factory=PudinkClientFactory())
+    game = PudinkGame(window=Window(600, 900, "Pudink"), factory=PudinkClientFactory())
     game.run()
     print("Game finished")
 

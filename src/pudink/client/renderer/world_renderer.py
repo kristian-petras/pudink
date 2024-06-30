@@ -29,6 +29,11 @@ class WorldRenderer:
         self.chat_entry = pyglet.gui.TextEntry("", 20, 20, 200, batch=self.batch)
         self.chat_entry.set_handler("on_commit", self._chat_handler)
 
+        self.background = asset_manager.get_background()
+        self.background_sprite = pyglet.sprite.Sprite(
+            self.background, x=0, y=0, batch=self.batch
+        )
+
         self.players = {}
         self.chat_bubbles = {}
         self.keys = key.KeyStateHandler()
