@@ -42,7 +42,7 @@ class TitleController(BaseController):
         print(f"Connected: {message}")
         if self.on_update_callback is not None:
             self.on_update_callback(message)
-        self.switch_screen("login")
+        self.switch_screen("menu")
 
     def _on_disconnect(self, error: ConnectionError) -> None:
         print(f"Disconnected: {error.message}")

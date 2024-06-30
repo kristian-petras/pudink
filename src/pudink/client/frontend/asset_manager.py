@@ -24,6 +24,7 @@ class AssetManager:
         self._button_pressed = self._init_image("button_pressed.png")
         self._button_depressed = self._init_image("button_depressed.png")
         self._button_hover = self._init_image("button_hover.png")
+        self._title = self._init_image("title.png")
 
     def get_head(self, head_id: int) -> Optional[Texture]:
         if head_id not in self._head_mapping:
@@ -58,3 +59,6 @@ class AssetManager:
 
     def get_button_hover(self) -> Texture:
         return self._button_depressed
+
+    def get_title(self) -> Texture:
+        return self._title

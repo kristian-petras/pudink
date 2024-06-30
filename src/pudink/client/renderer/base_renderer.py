@@ -7,6 +7,7 @@ from pudink.client.frontend.asset_manager import AssetManager
 from pudink.client.frontend.color_palette import ColorPalette
 from pyglet.gui import TextEntry, PushButton
 from pyglet.text import Label
+from pyglet.image import Texture
 
 
 class BaseRenderer:
@@ -39,12 +40,14 @@ class BaseRenderer:
         for handler in self._handlers:
             handler.enabled = False
 
-    def after_scene_switch(self, previous_scene):
+    def after_scene_switch(self, _):
         for handler in self._handlers:
             handler.enabled = True
             self.window.push_handlers(handler)
 
-    def create_entry(self, text, x, y, handler: Callable[[str], None], width=150):
+    def create_entry(
+        self, text, x, y, handler: Callable[[str], None], width=150
+    ) -> TextEntry:
         entry = TextEntry(
             text=text,
             x=x,
@@ -60,7 +63,7 @@ class BaseRenderer:
         self._handlers.append(entry)
         return entry
 
-    def create_button(self, x: int, y: int, handler: Callable[[], None]):
+    def create_button(self, x: int, y: int, handler: Callable[[], None]) -> PushButton:
         button = PushButton(
             x,
             y,
@@ -83,7 +86,8 @@ class BaseRenderer:
         multiline=False,
         anchor_x="center",
         anchor_y="center",
-    ):
+        align="left",
+    ) -> Label:
         return Label(
             text=text,
             x=x,
@@ -93,6 +97,21 @@ class BaseRenderer:
             width=width,
             multiline=multiline,
             batch=self.batch,
+            align=align,
             color=ColorPalette.LIGHT.value,
+            group=self.foreground_group,
+        )
+
+    def create_sprite(
+        self,
+        texture: Texture,
+        x: int,
+        y: int,
+    ) -> Sprite:
+        return Sprite(
+            texture,
+            x=x - texture.width // 2,
+            y=y - texture.height // 2,
+            batch=self.batch,
             group=self.foreground_group,
         )
