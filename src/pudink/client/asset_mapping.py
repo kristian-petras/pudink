@@ -21,6 +21,8 @@ class AssetManager:
             5: self._init_image("minecraft_body.png"),
         }
         self._background = self._init_image("background.png")
+        self._button_pressed = self._init_image("blue_button04.png")
+        self._button_depressed = self._init_image("blue_button05.png")
 
     def get_head(self, head_id: int) -> Optional[Texture]:
         if head_id not in self._head_mapping:
@@ -46,3 +48,12 @@ class AssetManager:
 
     def get_background(self) -> Texture:
         return self._background
+
+    def get_button_pressed(self) -> Texture:
+        return self._button_pressed
+
+    def get_button_depressed(self) -> Texture:
+        return self._button_depressed
+
+    def get_button_hover(self) -> Texture:
+        return self._button_depressed
