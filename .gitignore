@@ -1,3 +1,6 @@
+# Pudink specific:
+src/pudink/server/database/game.db
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
