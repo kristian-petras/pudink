@@ -101,11 +101,11 @@ class PudinkClientFactory(protocol.ClientFactory):
         self.client = client
         return client
 
-    def connect(self):
+    def connect(self, host: str, port: int):
         from twisted.internet import reactor
 
         if not self.connecting and not self.connected:
-            reactor.connectTCP(self.host, self.port, self)
+            reactor.connectTCP(host, port, self)
 
     def set_scene(self, scene):
         self.scene = scene
