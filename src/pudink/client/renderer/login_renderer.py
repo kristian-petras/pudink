@@ -1,9 +1,9 @@
 import pyglet
 
-from pudink.client.asset_manager import AssetManager
+from pudink.client.frontend.asset_manager import AssetManager
 from pudink.client.controller.login_controller import LoginController
 from pudink.client.pyglet.password_text_entry import PasswordTextEntry
-from pudink.client.renderer.color_palette import ColorPalette
+from pudink.client.frontend.color_palette import ColorPalette
 
 
 class LoginRenderer:

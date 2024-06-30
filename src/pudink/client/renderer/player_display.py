@@ -4,7 +4,7 @@ from pyglet.graphics import Batch, Group
 from pyglet.image import Texture
 from pyglet.shapes import Circle
 
-from pudink.client.renderer.color_palette import ColorPalette
+from pudink.client.frontend.color_palette import ColorPalette
 
 
 class PlayerDisplay:

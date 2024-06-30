@@ -1,8 +1,8 @@
 import pyglet
 
-from pudink.client.asset_manager import AssetManager
+from pudink.client.frontend.asset_manager import AssetManager
 from pudink.client.controller.world_controller import WorldController
-from pudink.client.renderer.color_palette import ColorPalette
+from pudink.client.frontend.color_palette import ColorPalette
 from pudink.client.renderer.player_display import PlayerDisplay
 from pudink.common.model import ChatMessage, Player, PlayerDisconnect, PlayerUpdate
 from pyglet.window import Window, key

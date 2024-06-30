@@ -3,8 +3,8 @@ from pyglet.graphics import Batch
 from pyglet.graphics import Group
 from pyglet.window import Window
 from pyglet.sprite import Sprite
-from pudink.client.asset_manager import AssetManager
-from pudink.client.renderer.color_palette import ColorPalette
+from pudink.client.frontend.asset_manager import AssetManager
+from pudink.client.frontend.color_palette import ColorPalette
 from pyglet.gui import TextEntry, PushButton
 from pyglet.text import Label
 

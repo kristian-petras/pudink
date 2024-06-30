@@ -5,7 +5,7 @@ from twisted.internet.error import ReactorNotRunning
 
 from pyglet.window import Window
 
-from pudink.client.asset_manager import AssetManager
+from pudink.client.frontend.asset_manager import AssetManager
 from pudink.client.controller.login_controller import LoginController
 from pudink.client.controller.title_controller import TitleController
 from pudink.client.controller.world_controller import WorldController
