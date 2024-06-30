@@ -1,14 +1,30 @@
 import pyglet
 
+from pudink.client.asset_mapping import AssetManager
 from pudink.client.controller.login_controller import LoginController
 from pudink.client.pyglet.password_text_entry import PasswordTextEntry
+from pudink.client.renderer.color_palette import ColorPalette
 
 
 class LoginRenderer:
-    def __init__(self, window: pyglet.window.Window, login: LoginController) -> None:
-        self.window = window
+    def __init__(
+        self,
+        window: pyglet.window.Window,
+        login: LoginController,
+        asset_manager: AssetManager,
+    ) -> None:
         self.login_controller = login
+        self.window = window
+
         self.batch = pyglet.graphics.Batch()
+        self.background_group = pyglet.graphics.Group(0)
+        self.foreground_group = pyglet.graphics.Group(1)
+
+        self.background = asset_manager.get_background()
+        self.background_sprite = pyglet.sprite.Sprite(
+            self.background, x=0, y=0, batch=self.batch, group=self.background_group
+        )
+
         self.title = pyglet.text.Label(
             "Pudink",
             x=window.width // 2,
@@ -16,7 +32,8 @@ class LoginRenderer:
             anchor_x="center",
             anchor_y="center",
             batch=self.batch,
-            color=(0, 0, 0, 255),
+            color=ColorPalette.LIGHT.value,
+            group=self.foreground_group,
         )
 
         self.state = pyglet.text.Label(
@@ -28,9 +45,10 @@ class LoginRenderer:
             batch=self.batch,
             multiline=True,
             width=window.width // 3,
-            color=(0, 0, 0, 255),
+            color=ColorPalette.LIGHT.value,
+            group=self.foreground_group,
         )
-        self.frame = pyglet.gui.Frame(self.window)
+        self.frame = pyglet.gui.Frame(self.window, order=2)
 
         depressed = pyglet.resource.image("blue_button04.png")
         pressed = pyglet.resource.image("blue_button05.png")
@@ -51,16 +69,46 @@ class LoginRenderer:
         # to drag-and-select events falling outside the Frame's spatial hash,
         # it's best to let it handle Window events directly.
         self.username_label = pyglet.text.Label(
-            "Username:", x=300, y=350, batch=self.batch, color=(0, 0, 0, 255)
+            "Username:",
+            x=300,
+            y=350,
+            batch=self.batch,
+            color=ColorPalette.LIGHT.value,
+            group=self.foreground_group,
         )
         self.password_label = pyglet.text.Label(
-            "Password:", x=300, y=300, batch=self.batch, color=(0, 0, 0, 255)
+            "Password:",
+            x=300,
+            y=300,
+            batch=self.batch,
+            color=ColorPalette.LIGHT.value,
+            group=self.foreground_group,
         )
 
-        self.username_entry = pyglet.gui.TextEntry("", 400, 350, 150, batch=self.batch)
+        self.username_entry = pyglet.gui.TextEntry(
+            "",
+            400,
+            350,
+            150,
+            batch=self.batch,
+            group=self.foreground_group,
+            color=ColorPalette.LIGHT.value,
+            text_color=ColorPalette.DARK.value,
+            caret_color=ColorPalette.DARK.value,
+        )
         self.username_entry.set_handler("on_commit", self.login_handler)
 
-        self.password_entry = PasswordTextEntry("", 400, 300, 150, batch=self.batch)
+        self.password_entry = PasswordTextEntry(
+            "",
+            400,
+            300,
+            150,
+            batch=self.batch,
+            group=self.foreground_group,
+            color=ColorPalette.LIGHT.value,
+            text_color=ColorPalette.DARK.value,
+            caret_color=ColorPalette.DARK.value,
+        )
         self.password_entry.set_handler("on_commit", self.login_handler)
 
         self.login_controller.connect(

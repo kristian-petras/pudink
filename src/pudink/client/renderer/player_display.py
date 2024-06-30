@@ -1,22 +1,36 @@
 from pyglet.text import Label
 from pyglet.sprite import Sprite
-from pyglet.graphics import Batch
+from pyglet.graphics import Batch, Group
 from pyglet.image import Texture
 from pyglet.shapes import Circle
+
+from pudink.client.renderer.color_palette import ColorPalette
 
 
 class PlayerDisplay:
     def __init__(
-        self, x: int, y: int, head: Texture, body: Texture, batch: Batch
+        self,
+        x: int,
+        y: int,
+        head: Texture,
+        body: Texture,
+        batch: Batch,
+        group: Group,
     ) -> None:
         self.x = x
         self.y = y
         self.batch = batch
+        self.group = group
         self.shadow = Circle(
-            x=x + 48, y=y - 32, radius=32, color=(8, 20, 30, 64), batch=batch
+            x=x + 48,
+            y=y - 32,
+            radius=32,
+            color=ColorPalette.SHADOW.value,
+            batch=batch,
+            group=group,
         )
-        self.body = Sprite(body, x=x, y=y - 32, batch=batch)
-        self.head = Sprite(head, x=x, y=y + 63, batch=batch)
+        self.body = Sprite(body, x=x, y=y - 32, batch=batch, group=group)
+        self.head = Sprite(head, x=x, y=y + 63, batch=batch, group=group)
         self.chat_bubbles = []
 
     def create_chat_bubble(self, message: str) -> None:
@@ -28,7 +42,8 @@ class PlayerDisplay:
                 batch=self.batch,
                 anchor_x="center",
                 anchor_y="center",
-                color=(246, 214, 189, 255),
+                color=ColorPalette.LIGHT.value,
+                group=self.group,
             )
         )
 

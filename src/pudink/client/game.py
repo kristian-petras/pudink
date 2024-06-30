@@ -32,7 +32,6 @@ class PudinkGame:
         self._game_loop_job = None
 
         self._window = window
-        pyglet.gl.glClearColor(0.8, 0.8, 0.8, 1.0)
 
         scene_manager = SceneManager(self._window)
 
@@ -46,7 +45,7 @@ class PudinkGame:
         world_state = WorldState()
         asset_manager = AssetManager()
         login_controller = LoginController(self._factory, scene_manager, world_state)
-        login_scene = LoginRenderer(self._window, login_controller)
+        login_scene = LoginRenderer(self._window, login_controller, asset_manager)
         world_controller = WorldController(self._factory, scene_manager, world_state)
         world_scene = WorldRenderer(self._window, world_controller, asset_manager)
 

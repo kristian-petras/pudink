@@ -2,6 +2,7 @@ import pyglet
 
 from pudink.client.asset_mapping import AssetManager
 from pudink.client.controller.world_controller import WorldController
+from pudink.client.renderer.color_palette import ColorPalette
 from pudink.client.renderer.player_display import PlayerDisplay
 from pudink.common.model import ChatMessage, Player, PlayerDisconnect, PlayerUpdate
 from pyglet.window import Window, key
@@ -26,16 +27,28 @@ class WorldRenderer:
         self.world_controller.on_player_update_callback = self.on_player_update
         self.world_controller.on_chat_message_callback = self.on_chat_message
 
-        self.chat_entry = pyglet.gui.TextEntry("", 20, 20, 200, batch=self.batch)
+        self.background_group = pyglet.graphics.Group(0)
+        self.foreground_group = pyglet.graphics.Group(1)
+
+        self.chat_entry = pyglet.gui.TextEntry(
+            "",
+            20,
+            20,
+            200,
+            batch=self.batch,
+            group=self.foreground_group,
+            color=ColorPalette.LIGHT.value,
+            text_color=ColorPalette.DARK.value,
+            caret_color=ColorPalette.DARK.value,
+        )
         self.chat_entry.set_handler("on_commit", self._chat_handler)
 
         self.background = asset_manager.get_background()
         self.background_sprite = pyglet.sprite.Sprite(
-            self.background, x=0, y=0, batch=self.batch
+            self.background, x=0, y=0, batch=self.batch, group=self.background_group
         )
 
         self.players = {}
-        self.chat_bubbles = {}
         self.keys = key.KeyStateHandler()
 
     def on_draw(self) -> None:
@@ -122,6 +135,7 @@ class WorldRenderer:
             self.asset_manager.get_head(player.character.head_type),
             self.asset_manager.get_body(player.character.body_type),
             self.batch,
+            self.foreground_group,
         )
 
     def on_player_leave(self, disconnect: PlayerDisconnect):
