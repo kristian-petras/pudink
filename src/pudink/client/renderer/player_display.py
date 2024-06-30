@@ -2,7 +2,7 @@ from pyglet.text import Label
 from pyglet.sprite import Sprite
 from pyglet.graphics import Batch
 from pyglet.image import Texture
-from pyglet.clock import schedule_once
+from pyglet.shapes import Circle
 
 
 class PlayerDisplay:
@@ -12,18 +12,23 @@ class PlayerDisplay:
         self.x = x
         self.y = y
         self.batch = batch
-        self.head = Sprite(head, x=x, y=y + 64, batch=batch)
+        self.shadow = Circle(
+            x=x + 48, y=y - 32, radius=32, color=(8, 20, 30, 64), batch=batch
+        )
         self.body = Sprite(body, x=x, y=y - 32, batch=batch)
+        self.head = Sprite(head, x=x, y=y + 63, batch=batch)
         self.chat_bubbles = []
 
     def create_chat_bubble(self, message: str) -> None:
         self.chat_bubbles.append(
             Label(
                 message,
-                x=self.x + 32,
-                y=self.y + 128 + 16 * len(self.chat_bubbles),
+                x=self.x + 48,
+                y=self.y + 160 + 32 * len(self.chat_bubbles),
                 batch=self.batch,
-                color=(0, 0, 0, 255),
+                anchor_x="center",
+                anchor_y="center",
+                color=(246, 214, 189, 255),
             )
         )
 
@@ -31,9 +36,11 @@ class PlayerDisplay:
         self.x = x
         self.y = y
         self.head.x = x
-        self.head.y = y + 64
+        self.head.y = y + 63
         self.body.x = x
         self.body.y = y - 32
+        self.shadow.x = x + 48
+        self.shadow.y = y - 32
         self._move_chat_bubbles(x, y)
 
     def pop_chat_bubble(self, _) -> None:
@@ -42,5 +49,5 @@ class PlayerDisplay:
 
     def _move_chat_bubbles(self, x: int, y: int) -> None:
         for index, bubble in enumerate(self.chat_bubbles):
-            bubble.x = x + 32
-            bubble.y = y + 128 + 16 * index
+            bubble.x = x + 48
+            bubble.y = y + 160 + 32 * index
