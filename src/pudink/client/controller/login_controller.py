@@ -41,7 +41,6 @@ class LoginController(BaseController):
             on_success,
             self.scene,
         )
-        self.factory.connect()
 
     def login(
         self,
