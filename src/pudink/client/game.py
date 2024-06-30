@@ -5,6 +5,7 @@ from twisted.internet.error import ReactorNotRunning
 
 from pyglet.window import Window
 
+from pudink.client.controller.menu_controller import MenuController
 from pudink.client.frontend.asset_manager import AssetManager
 from pudink.client.controller.login_controller import LoginController
 from pudink.client.controller.title_controller import TitleController
@@ -13,6 +14,7 @@ from pudink.client.model.world_state import WorldState
 from pudink.client.protocol.factory import PudinkClientFactory
 from pudink.client.frontend.scene_manager import SceneManager
 from pudink.client.renderer.login_renderer import LoginRenderer
+from pudink.client.renderer.menu_renderer import MenuRenderer
 from pudink.client.renderer.title_renderer import TitleRenderer
 from pudink.client.renderer.world_renderer import WorldRenderer
 
@@ -52,8 +54,11 @@ class PudinkGame:
         world_scene = WorldRenderer(self._window, world_controller, asset_manager)
         title_controller = TitleController(self._factory, scene_manager)
         title_renderer = TitleRenderer(self._window, asset_manager, title_controller)
+        menu_controller = MenuController(self._factory, scene_manager)
+        menu_renderer = MenuRenderer(self._window, asset_manager, menu_controller)
 
         scene_manager.register_scene("title", title_renderer)
+        scene_manager.register_scene("menu", menu_renderer)
         scene_manager.register_scene("login", login_scene)
         scene_manager.register_scene("world", world_scene)
 

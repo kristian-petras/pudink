@@ -26,6 +26,9 @@ class AssetManager:
         self._button_hover = self._init_image("button_hover.png")
         self._title = self._init_image("title.png")
 
+        self._left = self._init_image("left.png")
+        self._right = self._init_image("right.png")
+
     def get_head(self, head_id: int) -> Optional[Texture]:
         if head_id not in self._head_mapping:
             print(f"Head id {head_id} not found")
@@ -58,7 +61,19 @@ class AssetManager:
         return self._button_depressed
 
     def get_button_hover(self) -> Texture:
-        return self._button_depressed
+        return self._button_hover
 
     def get_title(self) -> Texture:
         return self._title
+
+    def get_heads(self):
+        return self._head_mapping
+
+    def get_bodies(self):
+        return self._body_mapping
+
+    def get_right(self) -> Texture:
+        return self._right
+
+    def get_left(self) -> Texture:
+        return self._left

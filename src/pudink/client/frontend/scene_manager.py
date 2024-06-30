@@ -11,11 +11,10 @@ class SceneManager:
         if name in self.scenes:
             old_scene = self.current_scene
             if self.current_scene:
-                print("Before scene switch")
                 self.current_scene.before_scene_switch()
             self.current_scene = self.scenes[name]
             self.current_scene.after_scene_switch(old_scene)
-            print("After scene switch")
+            print(f"Switched to screen '{name}'")
 
     def on_draw(self):
         if self.current_scene:

@@ -63,13 +63,21 @@ class BaseRenderer:
         self._handlers.append(entry)
         return entry
 
-    def create_button(self, x: int, y: int, handler: Callable[[], None]) -> PushButton:
+    def create_button(
+        self,
+        x: int,
+        y: int,
+        handler: Callable[[], None],
+        pressed=None,
+        depressed=None,
+        hover=None,
+    ) -> PushButton:
         button = PushButton(
             x,
             y,
-            pressed=self.asset_manager.get_button_pressed(),
-            depressed=self.asset_manager.get_button_depressed(),
-            hover=self.asset_manager.get_button_hover(),
+            pressed=pressed or self.asset_manager.get_button_pressed(),
+            depressed=depressed or self.asset_manager.get_button_depressed(),
+            hover=hover or self.asset_manager.get_button_hover(),
             batch=self.batch,
             group=self.foreground_group,
         )
