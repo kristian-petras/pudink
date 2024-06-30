@@ -7,11 +7,13 @@ from pyglet.window import Window
 
 from pudink.client.asset_mapping import AssetManager
 from pudink.client.controller.login_controller import LoginController
+from pudink.client.controller.title_controller import TitleController
 from pudink.client.controller.world_controller import WorldController
 from pudink.client.model.world_state import WorldState
 from pudink.client.protocol.factory import PudinkClientFactory
 from pudink.client.frontend.scene_manager import SceneManager
 from pudink.client.renderer.login_renderer import LoginRenderer
+from pudink.client.renderer.title_renderer import TitleRenderer
 from pudink.client.renderer.world_renderer import WorldRenderer
 
 
@@ -48,11 +50,14 @@ class PudinkGame:
         login_scene = LoginRenderer(self._window, login_controller, asset_manager)
         world_controller = WorldController(self._factory, scene_manager, world_state)
         world_scene = WorldRenderer(self._window, world_controller, asset_manager)
+        title_controller = TitleController(self._factory, scene_manager)
+        title_renderer = TitleRenderer(self._window, asset_manager, title_controller)
 
+        scene_manager.register_scene("title", title_renderer)
         scene_manager.register_scene("login", login_scene)
         scene_manager.register_scene("world", world_scene)
 
-        login_controller.switch_screen("login")
+        login_controller.switch_screen("title")
         print("Game started")
 
     def _game_tick(self):
