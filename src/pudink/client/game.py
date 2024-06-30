@@ -5,6 +5,7 @@ from twisted.internet.error import ReactorNotRunning
 
 from pyglet.window import Window
 
+from pudink.client.asset_mapping import AssetManager
 from pudink.client.controller.login_controller import LoginController
 from pudink.client.controller.world_controller import WorldController
 from pudink.client.model.world_state import WorldState
@@ -39,15 +40,15 @@ class PudinkGame:
         self._window.on_key_press = scene_manager.on_key_press
         self._window.on_close = self.stop
 
-        pyglet.resource.path = ["assets", "assets/ui"]
+        pyglet.resource.path = ["assets", "assets/ui", "assets/head", "assets/body"]
         pyglet.resource.reindex()
 
         world_state = WorldState()
-
+        asset_manager = AssetManager()
         login_controller = LoginController(self._factory, scene_manager, world_state)
         login_scene = LoginRenderer(self._window, login_controller)
         world_controller = WorldController(self._factory, scene_manager, world_state)
-        world_scene = WorldRenderer(self._window, world_controller)
+        world_scene = WorldRenderer(self._window, world_controller, asset_manager)
 
         scene_manager.register_scene("login", login_scene)
         scene_manager.register_scene("world", world_scene)
