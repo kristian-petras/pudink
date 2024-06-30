@@ -1,6 +1,6 @@
 import pyglet
 
-from pudink.client.asset_mapping import AssetManager
+from pudink.client.asset_manager import AssetManager
 from pudink.client.controller.login_controller import LoginController
 from pudink.client.pyglet.password_text_entry import PasswordTextEntry
 from pudink.client.renderer.color_palette import ColorPalette
@@ -15,6 +15,7 @@ class LoginRenderer:
     ) -> None:
         self.login_controller = login
         self.window = window
+        self.asset_manager = asset_manager
 
         self.batch = pyglet.graphics.Batch()
         self.background_group = pyglet.graphics.Group(0)
@@ -49,17 +50,12 @@ class LoginRenderer:
             group=self.foreground_group,
         )
         self.frame = pyglet.gui.Frame(self.window, order=2)
-
-        depressed = pyglet.resource.image("blue_button04.png")
-        pressed = pyglet.resource.image("blue_button05.png")
-        hover = pyglet.resource.image("blue_button05.png")
-
         self.pushbutton = pyglet.gui.PushButton(
             300,
             200,
-            pressed=pressed,
-            depressed=depressed,
-            hover=hover,
+            pressed=self.asset_manager.get_button_pressed(),
+            depressed=self.asset_manager.get_button_depressed(),
+            hover=self.asset_manager.get_button_hover(),
             batch=self.batch,
         )
         self.pushbutton.set_handler("on_release", self._login_handler)

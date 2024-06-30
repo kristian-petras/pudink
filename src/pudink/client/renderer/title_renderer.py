@@ -1,4 +1,4 @@
-from pudink.client.asset_mapping import AssetManager
+from pudink.client.asset_manager import AssetManager
 from pudink.client.controller.title_controller import TitleController
 from pudink.client.renderer.base_renderer import BaseRenderer
 from pyglet.window import Window
@@ -47,7 +47,7 @@ class TitleRenderer(BaseRenderer):
         )
         self._button = self.create_button(
             x=300,
-            y=window.height // 2,
+            y=window.height // 2 + 10,
             handler=self._connect_handler_button,
         )
         self._status_message = self.create_label(

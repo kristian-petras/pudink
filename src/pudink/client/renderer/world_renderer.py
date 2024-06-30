@@ -1,6 +1,6 @@
 import pyglet
 
-from pudink.client.asset_mapping import AssetManager
+from pudink.client.asset_manager import AssetManager
 from pudink.client.controller.world_controller import WorldController
 from pudink.client.renderer.color_palette import ColorPalette
 from pudink.client.renderer.player_display import PlayerDisplay
