@@ -1,5 +1,5 @@
 from pudink.server.database.connector import GameDatabase
-from pudink.server.protocol.connection import PudinkConnection
+from pudink.server.protocol.pudink_connection import PudinkConnection
 
 
 from twisted.internet import protocol
@@ -12,7 +12,5 @@ class PudinkServer(protocol.ServerFactory):
         self.players = {}
 
     def buildProtocol(self, addr):
-        server_protocol = PudinkConnection()
-        server_protocol.factory = self
-
+        server_protocol = PudinkConnection(self.db, self)
         return server_protocol

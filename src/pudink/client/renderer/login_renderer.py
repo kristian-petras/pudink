@@ -4,6 +4,7 @@ from pudink.client.frontend.asset_manager import AssetManager
 from pudink.client.controller.login_controller import LoginController
 from pudink.client.pyglet.password_text_entry import PasswordTextEntry
 from pudink.client.frontend.color_palette import ColorPalette
+from pudink.common.model import ConnectionFailure
 
 
 class LoginRenderer:

@@ -1,6 +1,4 @@
-from pudink.common.model import NewAccount, Credentials, PlayerUpdate, ChatMessage
 from pudink.common.translator import MessageTranslator
-from pudink.server.handler.handler import Handler
 from pudink.server.handler.handlers.connected_handler import ConnectedHandler
 from pudink.server.handler.handlers.disconnected_handler import DisconnectedHandler
 from pudink.server.handler.handlers.not_initialized_handler import NotInitializedHandler
@@ -16,12 +14,10 @@ class MessageDispatcher:
             ConnectionState.DISCONNECTED: DisconnectedHandler(self.connection),
         }
 
-    def dispatch_message(self, data):
-        handler = self.handlers.get(self.connection.state)
-        message = MessageTranslator.decode(data)
+    def dispatch_message(self, message):
+        handler = self.handlers[self.connection.state]
 
-        action = handler.get(type(message))
-        if not action:
-            raise NotImplemented(f"Unhandled message type: {type(message)}")
+        if type(message) == bytes:
+            message = MessageTranslator.decode(message)
 
-        action(message)
+        handler.handle_message(message)

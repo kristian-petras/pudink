@@ -2,7 +2,7 @@ import signal, os
 
 from twisted.internet import reactor
 
-from pudink.server.protocol.server import PudinkServer
+from pudink.server.protocol.pudink_server import PudinkServer
 from pudink.server.database.connector import GameDatabase
 
 from twisted.internet.error import ReactorNotRunning
@@ -18,9 +18,6 @@ class PudinkServerRunner:
         self._port = port
 
     def run(self):
-        self._db.register_user(NewAccount("admin", "admin", Character(1, 1)))
-        self._db.register_user(NewAccount("test", "test", Character(2, 1)))
-
         reactor.listenTCP(self._port, self._factory)
         signal.signal(signal.SIGINT, self._sigint_handler)
         print(f"Server started, listening on port {self._port}")

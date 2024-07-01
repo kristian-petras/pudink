@@ -12,7 +12,7 @@ from pudink.common.translator import MessageTranslator
 class Handler:
     def __init__(self, connection):
         self.connection = connection
-        self.db = self.connection.factory.db
+        self.db = self.connection.db
         self.factory = self.connection.factory
         self.message_handlers = {
             NewAccount: self.handle_new_account,
@@ -21,6 +21,13 @@ class Handler:
             ChatMessage: self.handle_chat_message,
             PlayerDisconnect: self.handle_player_disconnect,
         }
+
+    def handle_message(self, message):
+        action = self.message_handlers[type(message)]
+        if not action:
+            raise NotImplemented(f"Unhandled message type: {type(message)}")
+
+        action(message)
 
     def handle_new_account(self, message: NewAccount):
         raise NotImplemented()
@@ -35,9 +42,7 @@ class Handler:
         raise NotImplemented()
 
     def handle_player_disconnect(self, message: PlayerDisconnect):
-        print(message)
-        disconnect = MessageTranslator.encode(message)
-        self.broadcast_message(disconnect)
+        self.broadcast_message(message)
 
     def _send_error(self, error_message):
         error = MessageTranslator.encode(error_message)
@@ -52,11 +57,11 @@ class Handler:
         self.connection.transport.write(player_snapshot)
 
     def broadcast_new_player(self) -> None:
-        new_player = MessageTranslator.encode(self.connection.player)
-        print(new_player)
-        self.broadcast_message(new_player)
+        self.broadcast_message(self.connection.player)
 
     def broadcast_message(self, message) -> None:
+        if type(message) == bytes:
+            message = MessageTranslator.decode(message)
         for c in self.factory.clients:
             if c != self.connection:
                 c.transport.write(message)

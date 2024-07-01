@@ -35,6 +35,7 @@ class MenuRenderer(BaseRenderer):
             text="",
             x=250,
             y=window.height // 2 + 150,
+            password=True,
         )
 
         self._login_button = self.create_button(
@@ -51,7 +52,7 @@ class MenuRenderer(BaseRenderer):
         self._status_message = self.create_label(
             text="",
             x=window.width // 2 - 100,
-            y=window.height // 2 + 90,
+            y=window.height // 2 - 200,
             width=200,
             multiline=True,
             anchor_x="left",
@@ -119,7 +120,9 @@ class MenuRenderer(BaseRenderer):
             y=window.height // 2 - 120,
         )
 
-    def _login_handler(self, text) -> None:
+        self.controller.on_fail_callback = self._on_fail
+
+    def _login_handler(self) -> None:
         self.controller.login(self._username.value, self._password.value)
 
     def _register_handler(self) -> None:
@@ -173,3 +176,6 @@ class MenuRenderer(BaseRenderer):
             x=self.window.width // 2,
             y=self.window.height // 2 - 50,
         )
+
+    def _on_fail(self, message: str) -> None:
+        self._status_message.text = message

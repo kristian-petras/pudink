@@ -94,4 +94,4 @@ class WorldController(BaseController):
 
     def _on_disconnect(self, data) -> None:
         print(f"Disconnected from server with message: {data}")
-        self.switch_screen("login")
+        self.switch_screen("menu")

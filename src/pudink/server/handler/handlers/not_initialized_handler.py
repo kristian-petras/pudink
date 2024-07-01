@@ -15,9 +15,16 @@ class NotInitializedHandler(Handler):
         super().__init__(connection)
 
     def handle_new_account(self, message: NewAccount):
+        if len(message.name) < 3 or len(message.password) < 3:
+            fail = ConnectionFailure(
+                "Name and password must be at least 3 characters long"
+            )
+            self._send_error(fail)
+            return
         account = self.db.register_user(message)
         if self._is_successful(account):
-            self.handle_credentials(Credentials(account.name, account.password))
+            self._send_error(ConnectionFailure("Account created successfully"))
+            self.handle_credentials(Credentials(message.name, message.password))
         else:
             self._send_error(account)
 
@@ -26,7 +33,7 @@ class NotInitializedHandler(Handler):
 
         player = self.db.authenticate_user(message)
 
-        if self._is_successful(player):
+        if not self._is_successful(player):
             self._send_error(player)
             return
 

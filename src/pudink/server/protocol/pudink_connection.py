@@ -1,13 +1,16 @@
 from twisted.internet import protocol
 
 from pudink.common.model import PlayerDisconnect
+from pudink.server.database.connector import GameDatabase
 from pudink.server.handler.dispatcher import MessageDispatcher
 from pudink.server.protocol.connection_states import ConnectionState
 
 
 class PudinkConnection(protocol.Protocol):
 
-    def __init__(self):
+    def __init__(self, db: GameDatabase, factory):
+        self.factory = factory
+        self.db = db
         self.player = None
         self.message_dispatcher = MessageDispatcher(self)
         self.state = ConnectionState.NOT_INITIALIZED

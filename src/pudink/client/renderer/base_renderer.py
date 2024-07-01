@@ -9,6 +9,8 @@ from pyglet.gui import TextEntry, PushButton
 from pyglet.text import Label
 from pyglet.image import Texture
 
+from pudink.client.pyglet.password_text_entry import PasswordTextEntry
+
 
 class BaseRenderer:
     def __init__(self, window: Window, asset_manager: AssetManager) -> None:
@@ -46,19 +48,38 @@ class BaseRenderer:
             self.window.push_handlers(handler)
 
     def create_entry(
-        self, text, x, y, handler: Callable[[str], None] = None, width=150
+        self,
+        text,
+        x,
+        y,
+        handler: Callable[[str], None] = None,
+        width=150,
+        password: bool = False,
     ) -> TextEntry:
-        entry = TextEntry(
-            text=text,
-            x=x,
-            y=y,
-            width=width,
-            batch=self.batch,
-            group=self.foreground_group,
-            color=ColorPalette.LIGHT.value,
-            text_color=ColorPalette.DARK.value,
-            caret_color=ColorPalette.DARK.value,
-        )
+        if password:
+            entry = PasswordTextEntry(
+                text=text,
+                x=x,
+                y=y,
+                width=width,
+                batch=self.batch,
+                group=self.foreground_group,
+                color=ColorPalette.LIGHT.value,
+                text_color=ColorPalette.DARK.value,
+                caret_color=ColorPalette.DARK.value,
+            )
+        else:
+            entry = TextEntry(
+                text=text,
+                x=x,
+                y=y,
+                width=width,
+                batch=self.batch,
+                group=self.foreground_group,
+                color=ColorPalette.LIGHT.value,
+                text_color=ColorPalette.DARK.value,
+                caret_color=ColorPalette.DARK.value,
+            )
         if handler is not None:
             entry.set_handler("on_commit", handler)
         self._handlers.append(entry)

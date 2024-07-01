@@ -1,6 +1,6 @@
 import os
-from pudink.server.server import PudinkServerRunner
-from pudink.server.protocol.server import PudinkServer
+from pudink.server.pudink_server_runner import PudinkServerRunner
+from pudink.server.protocol.pudink_server import PudinkServer
 
 
 def main():

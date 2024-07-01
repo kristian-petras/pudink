@@ -1,7 +1,7 @@
 from typing import Callable, Optional
 from pudink.client.controller.base_controller import BaseController
 from pudink.client.protocol.factory import ClientCallback
-from pudink.common.model import ConnectionError
+from pudink.common.model import ConnectionFailure
 
 
 class TitleController(BaseController):
@@ -44,7 +44,7 @@ class TitleController(BaseController):
             self.on_update_callback(message)
         self.switch_screen("menu")
 
-    def _on_disconnect(self, error: ConnectionError) -> None:
+    def _on_disconnect(self, error: ConnectionFailure) -> None:
         print(f"Disconnected: {error.message}")
         if self.on_update_callback is not None:
             self.on_update_callback(error.message)

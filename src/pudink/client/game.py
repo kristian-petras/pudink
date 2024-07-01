@@ -54,7 +54,7 @@ class PudinkGame:
         world_scene = WorldRenderer(self._window, world_controller, asset_manager)
         title_controller = TitleController(self._factory, scene_manager)
         title_renderer = TitleRenderer(self._window, asset_manager, title_controller)
-        menu_controller = MenuController(self._factory, scene_manager)
+        menu_controller = MenuController(self._factory, scene_manager, world_state)
         menu_renderer = MenuRenderer(self._window, asset_manager, menu_controller)
 
         scene_manager.register_scene("title", title_renderer)
