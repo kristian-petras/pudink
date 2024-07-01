@@ -1,8 +1,14 @@
 import os
 import sqlite3
-from typing import Optional, List
+from typing import Optional, Union
 
-from pudink.common.model import Character, PlayerInitialization
+from pudink.common.model import (
+    Character,
+    PlayerInitialization,
+    ConnectionFailure,
+    NewAccount,
+    Credentials,
+)
 
 
 class GameDatabase:
@@ -33,21 +39,51 @@ class GameDatabase:
         print("Database initialized successfully")
 
     def register_user(
-        self, username: str, password: str, character_id: int
-    ) -> Optional[PlayerInitialization]:
-        pass
+        self, account_request: NewAccount
+    ) -> Union[PlayerInitialization, ConnectionFailure]:
+        try:
+            self._conn.execute("BEGIN TRANSACTION")
+            character_query = "INSERT INTO characters (head, body) VALUES (?, ?)"
+            character_params = (
+                account_request.character.head_type,
+                account_request.character.body_type,
+            )
+            self._cursor.execute(character_query, character_params)
+            character_id = self._cursor.lastrowid
+
+            player_query = "INSERT INTO players (username, password, character_id) VALUES (?, ?, ?)"
+            player_params = (
+                account_request.name,
+                account_request.password,
+                character_id,
+            )
+            self._cursor.execute(player_query, player_params)
+            self._conn.commit()
+
+            print(
+                f"User {account_request.name} registered successfully with character ID {character_id}"
+            )
+
+            return PlayerInitialization(
+                self._cursor.lastrowid,
+                account_request.character,
+            )
+        except sqlite3.IntegrityError as e:
+            self._conn.rollback()
+            error = f"Failed to register user {account_request.name}: {e}"
+            return ConnectionFailure(error)
 
     def authenticate_user(
-        self, username: str, password: str
-    ) -> Optional[PlayerInitialization]:
+        self, credentials: Credentials
+    ) -> Union[PlayerInitialization, ConnectionFailure]:
         query = "SELECT id, character_id FROM players WHERE username=? AND password=?"
-        params = (username, password)
+        params = (credentials.name, credentials.password)
         self._cursor.execute(query, params)
 
         if row := self._cursor.fetchone():
             return PlayerInitialization(row[0], self._get_character_by_id(row[1]))
 
-        return None
+        return ConnectionFailure("Failed to authenticate user")
 
     def _get_character_by_id(self, character_id: int) -> Optional[Character]:
         query = "SELECT head, body FROM characters WHERE id=?"

@@ -6,7 +6,7 @@ from pudink.client.protocol.factory import ClientCallback, PudinkClientFactory
 
 from typing import Callable
 
-from pudink.common.model import Credentials, ConnectionError, PlayerSnapshot
+from pudink.common.model import Credentials, ConnectionFailure, PlayerSnapshot
 
 
 class LoginController(BaseController):
@@ -24,7 +24,7 @@ class LoginController(BaseController):
         self,
         on_connecting: Callable[[str], None],
         on_success: Callable[[str], None],
-        on_fail: Callable[[ConnectionError], None],
+        on_fail: Callable[[ConnectionFailure], None],
     ) -> None:
         self.factory.registerCallback(
             ClientCallback.STARTED_CONNECTING,
@@ -47,7 +47,7 @@ class LoginController(BaseController):
         username: str,
         password: str,
         on_success: Callable[[str], None],
-        on_fail: Callable[[ConnectionError], None],
+        on_fail: Callable[[ConnectionFailure], None],
     ) -> None:
         if not self.factory.connected:
             self.factory.connect()
@@ -67,9 +67,9 @@ class LoginController(BaseController):
         self,
         data: any,
         on_success: Callable[[str], None],
-        on_fail: Callable[[ConnectionError], None],
+        on_fail: Callable[[ConnectionFailure], None],
     ) -> None:
-        if type(data) == ConnectionError:
+        if type(data) == ConnectionFailure:
             on_fail(data)
         elif type(data) == PlayerSnapshot:
             success = f"Switching to world screen, players online: {len(data.players)}"

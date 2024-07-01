@@ -3,7 +3,7 @@ from pudink.common.model import (
     Character,
     ChatMessage,
     Credentials,
-    ConnectionError,
+    ConnectionFailure,
     NewAccount,
     Player,
     PlayerDisconnect,
@@ -31,8 +31,8 @@ class MessageTranslator:
         return decode_map[message["type"]](message)
 
     @staticmethod
-    def _decode_error(message: dict) -> ConnectionError:
-        return ConnectionError(message["message"])
+    def _decode_error(message: dict) -> ConnectionFailure:
+        return ConnectionFailure(message["message"])
 
     @staticmethod
     def _decode_credentials(message: dict) -> Credentials:
@@ -106,7 +106,7 @@ class MessageTranslator:
         }
 
     @staticmethod
-    def _encode_error(message: ConnectionError) -> dict:
+    def _encode_error(message: ConnectionFailure) -> dict:
         return {"type": "error", "message": message.message}
 
     @staticmethod
@@ -182,7 +182,7 @@ class MessageTranslator:
     @staticmethod
     def encode(message: any) -> bytes:
         encode_map = {
-            ConnectionError: MessageTranslator._encode_error,
+            ConnectionFailure: MessageTranslator._encode_error,
             Credentials: MessageTranslator._encode_credentials,
             NewAccount: MessageTranslator._encode_new_account,
             Player: MessageTranslator._encode_player,

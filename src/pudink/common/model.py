@@ -1,9 +1,9 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 
 # Sent from server to client when an error occurs
 @dataclass
-class ConnectionError:
+class ConnectionFailure:
     message: str
 
 
@@ -17,8 +17,18 @@ class Credentials:
 # Describes the character's appearance
 @dataclass
 class Character:
-    head_type: int
-    body_type: int
+    head_type: int = field(metadata={"range": (1, 5)})
+    body_type: int = field(metadata={"range": (1, 5)})
+
+    def __post_init__(self):
+        if not (self.head_type in range(1, 6)):
+            raise ValueError(
+                f"head_type must be between 1 and 5. Given: {self.head_type}"
+            )
+        if not (self.body_type in range(1, 6)):
+            raise ValueError(
+                f"body_type must be between 1 and 5. Given: {self.body_type}"
+            )
 
 
 # Sent from client to server during account creation

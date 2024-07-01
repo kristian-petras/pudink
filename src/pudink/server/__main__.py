@@ -7,7 +7,7 @@ def main():
     # TODO: config a nie v src =)
     db_location = os.path.join(os.path.dirname(__file__), "./database/game.db")
 
-    server = PudinkServerRunner(factory=PudinkServer(), db_location=db_location)
+    server = PudinkServerRunner(db_location=db_location)
     server.run()
 
 

@@ -1,3 +1,4 @@
+from pudink.server.database.connector import GameDatabase
 from pudink.server.protocol.connection import PudinkConnection
 
 
@@ -5,7 +6,8 @@ from twisted.internet import protocol
 
 
 class PudinkServer(protocol.ServerFactory):
-    def __init__(self):
+    def __init__(self, db: GameDatabase):
+        self.db = db
         self.clients = []
         self.players = {}
 

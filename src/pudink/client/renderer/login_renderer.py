@@ -140,7 +140,7 @@ class LoginRenderer:
         print(data)
         self.state.text = data
 
-    def _on_fail(self, data: ConnectionError):
+    def _on_fail(self, data: ConnectionFailure):
         print(data)
         self.state.text = data.message
 

@@ -4,7 +4,7 @@ import json
 
 from twisted.internet import protocol
 
-from pudink.common.model import ConnectionError, PlayerUpdate
+from pudink.common.model import ConnectionFailure, PlayerUpdate
 from pudink.common.translator import MessageTranslator
 
 
@@ -31,7 +31,7 @@ class PudinkClient(protocol.Protocol):
         self.factory.process_callback(ClientCallback.DATA_RECEIVED, message)
 
     def connectionLost(self, reason):
-        error = ConnectionError(reason.getErrorMessage())
+        error = ConnectionFailure(reason.getErrorMessage())
         self.factory.process_callback(ClientCallback.CONNECTION_FAILED, error)
 
     def send_message(self, message: any) -> None:
@@ -59,12 +59,12 @@ class PudinkClientFactory(protocol.ClientFactory):
         self.connected = False
 
     def clientConnectionFailed(self, connector, reason):
-        error = ConnectionError(reason.getErrorMessage())
+        error = ConnectionFailure(reason.getErrorMessage())
         self.process_callback(ClientCallback.CONNECTION_FAILED, error)
         self.client = None
 
     def clientConnectionLost(self, connector, reason):
-        error = ConnectionError(reason.getErrorMessage())
+        error = ConnectionFailure(reason.getErrorMessage())
         self.process_callback(ClientCallback.CONNECTION_FAILED, error)
         self.client = None
 
@@ -97,7 +97,7 @@ class PudinkClientFactory(protocol.ClientFactory):
         client = PudinkClient(self.registeredCallbacks)
         client.factory = self
         if self.client is not None:
-            raise ConnectionError("Client already built")
+            raise ConnectionFailure("Client already built")
         self.client = client
         return client
 
