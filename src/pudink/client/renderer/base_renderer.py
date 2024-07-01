@@ -46,7 +46,7 @@ class BaseRenderer:
             self.window.push_handlers(handler)
 
     def create_entry(
-        self, text, x, y, handler: Callable[[str], None], width=150
+        self, text, x, y, handler: Callable[[str], None] = None, width=150
     ) -> TextEntry:
         entry = TextEntry(
             text=text,
@@ -59,7 +59,8 @@ class BaseRenderer:
             text_color=ColorPalette.DARK.value,
             caret_color=ColorPalette.DARK.value,
         )
-        entry.set_handler("on_commit", handler)
+        if handler is not None:
+            entry.set_handler("on_commit", handler)
         self._handlers.append(entry)
         return entry
 

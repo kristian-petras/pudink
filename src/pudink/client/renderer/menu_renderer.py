@@ -25,7 +25,6 @@ class MenuRenderer(BaseRenderer):
             text="",
             x=250,
             y=window.height // 2 + 190,
-            handler=self._connect_handler,
         )
         self._password_label = self.create_label(
             text="Password:",
@@ -36,18 +35,19 @@ class MenuRenderer(BaseRenderer):
             text="",
             x=250,
             y=window.height // 2 + 150,
-            handler=self._connect_handler,
         )
-        self._button = self.create_button(
+
+        self._login_button = self.create_button(
             x=window.width // 2 - 32,
-            y=window.height // 2 - 140,
-            handler=self._connect_handler_button,
+            y=window.height // 2 + 80,
+            handler=self._login_handler,
         )
-        self._button_label = self.create_label(
-            text="Login/Register:",
+        self._login_button_label = self.create_label(
+            text="Login:",
             x=window.width // 2,
-            y=window.height // 2 - 80,
+            y=window.height // 2 + 130,
         )
+
         self._status_message = self.create_label(
             text="",
             x=window.width // 2 - 100,
@@ -63,19 +63,19 @@ class MenuRenderer(BaseRenderer):
         self.head = self.create_sprite(
             texture=asset_manager.get_head(self.head_counter),
             x=window.width // 2,
-            y=window.height // 2 + 96,
+            y=window.height // 2 + 46,
         )
 
         self.body_counter = 1
         self.body = self.create_sprite(
             texture=asset_manager.get_body(self.body_counter),
             x=window.width // 2,
-            y=window.height // 2,
+            y=window.height // 2 - 50,
         )
 
         self.right_button_head = self.create_button(
             x=window.width // 2 + 64,
-            y=window.height // 2 + 64,
+            y=window.height // 2 + 14,
             handler=self._next_head,
             pressed=asset_manager.get_right(),
             depressed=asset_manager.get_right(),
@@ -84,7 +84,7 @@ class MenuRenderer(BaseRenderer):
 
         self.right_button_body = self.create_button(
             x=window.width // 2 + 64,
-            y=window.height // 2,
+            y=window.height // 2 - 50,
             handler=self._next_body,
             pressed=asset_manager.get_right(),
             depressed=asset_manager.get_right(),
@@ -93,7 +93,7 @@ class MenuRenderer(BaseRenderer):
 
         self.left_button_head = self.create_button(
             x=window.width // 2 - 96,
-            y=window.height // 2 + 64,
+            y=window.height // 2 + 14,
             handler=self._previous_head,
             pressed=asset_manager.get_left(),
             depressed=asset_manager.get_left(),
@@ -102,18 +102,33 @@ class MenuRenderer(BaseRenderer):
 
         self.left_button_body = self.create_button(
             x=window.width // 2 - 96,
-            y=window.height // 2,
+            y=window.height // 2 - 50,
             handler=self._previous_body,
             pressed=asset_manager.get_left(),
             depressed=asset_manager.get_left(),
             hover=asset_manager.get_left(),
         )
+        self._register_button = self.create_button(
+            x=window.width // 2 - 32,
+            y=window.height // 2 - 170,
+            handler=self._register_handler,
+        )
+        self._register_button_label = self.create_label(
+            text="Register:",
+            x=window.width // 2,
+            y=window.height // 2 - 120,
+        )
 
-    def _connect_handler(self, text) -> None:
-        self._connect_handler_button()
+    def _login_handler(self, text) -> None:
+        self.controller.login(self._username.value, self._password.value)
 
-    def _connect_handler_button(self) -> None:
-        print("Connecting")
+    def _register_handler(self) -> None:
+        self.controller.register(
+            self._username.value,
+            self._password.value,
+            self.head_counter,
+            self.body_counter,
+        )
 
     def _next_head(self) -> None:
         self.head_counter += 1
@@ -123,7 +138,7 @@ class MenuRenderer(BaseRenderer):
         self.head = self.create_sprite(
             texture=self.asset_manager.get_head(self.head_counter),
             x=self.window.width // 2,
-            y=self.window.height // 2 + 96,
+            y=self.window.height // 2 + 46,
         )
 
     def _next_body(self) -> None:
@@ -134,7 +149,7 @@ class MenuRenderer(BaseRenderer):
         self.body = self.create_sprite(
             texture=self.asset_manager.get_body(self.body_counter),
             x=self.window.width // 2,
-            y=self.window.height // 2,
+            y=self.window.height // 2 - 50,
         )
 
     def _previous_head(self) -> None:
@@ -145,7 +160,7 @@ class MenuRenderer(BaseRenderer):
         self.head = self.create_sprite(
             texture=self.asset_manager.get_head(self.head_counter),
             x=self.window.width // 2,
-            y=self.window.height // 2 + 96,
+            y=self.window.height // 2 + 46,
         )
 
     def _previous_body(self) -> None:
@@ -156,5 +171,5 @@ class MenuRenderer(BaseRenderer):
         self.body = self.create_sprite(
             texture=self.asset_manager.get_body(self.body_counter),
             x=self.window.width // 2,
-            y=self.window.height // 2,
+            y=self.window.height // 2 - 50,
         )

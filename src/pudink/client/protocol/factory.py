@@ -24,15 +24,15 @@ class PudinkClient(protocol.Protocol):
         self.registered_callbacks = registeredCallbacks
 
     def connectionMade(self):
-        self.factory._process_callback(ClientCallback.CONNECTION_SUCCESS, "Connected!")
+        self.factory.process_callback(ClientCallback.CONNECTION_SUCCESS, "Connected!")
 
     def dataReceived(self, data):
         message = MessageTranslator.decode(data)
-        self.factory._process_callback(ClientCallback.DATA_RECEIVED, message)
+        self.factory.process_callback(ClientCallback.DATA_RECEIVED, message)
 
     def connectionLost(self, reason):
         error = ConnectionError(reason.getErrorMessage())
-        self.factory._process_callback(ClientCallback.CONNECTION_FAILED, error)
+        self.factory.process_callback(ClientCallback.CONNECTION_FAILED, error)
 
     def send_message(self, message: any) -> None:
         if type(message) != PlayerUpdate:
@@ -60,18 +60,18 @@ class PudinkClientFactory(protocol.ClientFactory):
 
     def clientConnectionFailed(self, connector, reason):
         error = ConnectionError(reason.getErrorMessage())
-        self._process_callback(ClientCallback.CONNECTION_FAILED, error)
+        self.process_callback(ClientCallback.CONNECTION_FAILED, error)
         self.client = None
 
     def clientConnectionLost(self, connector, reason):
         error = ConnectionError(reason.getErrorMessage())
-        self._process_callback(ClientCallback.CONNECTION_FAILED, error)
+        self.process_callback(ClientCallback.CONNECTION_FAILED, error)
         self.client = None
 
     def startedConnecting(self, connector):
-        self._process_callback(ClientCallback.STARTED_CONNECTING, "Connecting")
+        self.process_callback(ClientCallback.STARTED_CONNECTING, "Connecting")
 
-    def _process_callback(self, event: ClientCallback, data: any) -> None:
+    def process_callback(self, event: ClientCallback, data: any) -> None:
         if event == ClientCallback.STARTED_CONNECTING:
             self.connecting = True
             self.connected = False
