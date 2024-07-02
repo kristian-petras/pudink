@@ -3,7 +3,7 @@ from dataclasses import dataclass, field
 
 # Sent from server to client when an error occurs
 @dataclass
-class ConnectionFailure:
+class ConnectionFailure(BaseException):
     message: str
 
 
@@ -42,20 +42,20 @@ class NewAccount:
 # Used for initializing player data on origin client
 @dataclass
 class PlayerInitialization:
-    id: int
+    id: str
     character: Character
 
 
 # Used for informing other players that a player has disconnected
 @dataclass
 class PlayerDisconnect:
-    id: int
+    id: str
 
 
 # Used for initializing player data on other clients
 @dataclass
 class Player:
-    id: int
+    id: str
     character: Character
     x: int
     y: int
@@ -64,7 +64,7 @@ class Player:
 # Used for sending player data to other clients
 @dataclass
 class PlayerUpdate:
-    id: int
+    id: str
     x: int
     y: int
 
@@ -72,12 +72,12 @@ class PlayerUpdate:
 # Sent from server to client during login
 @dataclass
 class PlayerSnapshot:
-    current_player_id: int
+    current_player_id: str
     players: list[Player]
 
 
 # Sent from client to server when a chat message is sent
 @dataclass
 class ChatMessage:
-    player_id: int
+    player_id: str
     message: str

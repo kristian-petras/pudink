@@ -1,4 +1,5 @@
 import json
+from typing import Any
 from pudink.common.model import (
     Character,
     ChatMessage,
@@ -15,8 +16,8 @@ from pudink.common.model import (
 
 class MessageTranslator:
     @staticmethod
-    def decode(message: bytes) -> any:
-        message = json.loads(message.decode("utf-8"))
+    def decode(message: bytes) -> Any:
+        decoded = json.loads(message.decode("utf-8"))
         decode_map = {
             "error": MessageTranslator._decode_error,
             "credentials": MessageTranslator._decode_credentials,
@@ -28,7 +29,7 @@ class MessageTranslator:
             "player_snapshot": MessageTranslator._decode_player_snapshot,
             "chat_message": MessageTranslator._decode_chat_message,
         }
-        return decode_map[message["type"]](message)
+        return decode_map[decoded["type"]](message)
 
     @staticmethod
     def _decode_error(message: dict) -> ConnectionFailure:
@@ -180,7 +181,7 @@ class MessageTranslator:
         }
 
     @staticmethod
-    def encode(message: any) -> bytes:
+    def encode(message: Any) -> bytes:
         encode_map = {
             ConnectionFailure: MessageTranslator._encode_error,
             Credentials: MessageTranslator._encode_credentials,
