@@ -1,3 +1,4 @@
+from typing import Optional
 import pyglet
 from twisted.internet import reactor
 from twisted.internet.task import LoopingCall
@@ -17,9 +18,17 @@ from pudink.client.renderer.login_renderer import LoginRenderer
 from pudink.client.renderer.menu_renderer import MenuRenderer
 from pudink.client.renderer.title_renderer import TitleRenderer
 from pudink.client.renderer.world_renderer import WorldRenderer
+from twisted.internet.defer import Deferred
 
 
 class PudinkGame:
+    _factory: PudinkClientFactory
+    _host: str
+    _port: int
+    _game_loop: LoopingCall
+    _game_loop_job: Optional[Deferred[LoopingCall]]
+    _window: Window
+
     def __init__(
         self,
         window: Window,
@@ -48,8 +57,6 @@ class PudinkGame:
 
         world_state = WorldState()
         asset_manager = AssetManager()
-        login_controller = LoginController(self._factory, scene_manager, world_state)
-        login_scene = LoginRenderer(self._window, login_controller, asset_manager)
         world_controller = WorldController(self._factory, scene_manager, world_state)
         world_scene = WorldRenderer(self._window, world_controller, asset_manager)
         title_controller = TitleController(self._factory, scene_manager)
@@ -59,10 +66,9 @@ class PudinkGame:
 
         scene_manager.register_scene("title", title_renderer)
         scene_manager.register_scene("menu", menu_renderer)
-        scene_manager.register_scene("login", login_scene)
         scene_manager.register_scene("world", world_scene)
 
-        login_controller.switch_screen("title")
+        title_controller.switch_screen("title")
         print("Game started")
 
     def _game_tick(self):
@@ -74,16 +80,21 @@ class PudinkGame:
 
     def run(self):
         self._game_loop_job = self._game_loop.start(1.0 / 30.0)
-        reactor.run()
+        reactor.run()  # type: ignore
 
     def stop(self):
         self._game_loop.stop()
-        self._game_loop_job.addCallback(lambda _: self._window.close())
+
+        if self._game_loop_job:
+            self._game_loop_job.addCallback(lambda _: self._window.close())
+        else:
+            self._window.close()
+            print("Game already stopped")
+
         try:
-            reactor.stop()
+            reactor.stop()  # type: ignore
         except ReactorNotRunning:
             print("Reactor already stopped")
-            pass
 
     def _connect(self):
-        reactor.connectTCP(self._host, self._port, self._factory)
+        reactor.connectTCP(self._host, self._port, self._factory)  # type: ignore
