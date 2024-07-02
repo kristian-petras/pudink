@@ -13,7 +13,7 @@ class PudinkConnection(protocol.Protocol):
         self.db = db
         self.player = None
         self.message_dispatcher = MessageDispatcher(self)
-        self.state = ConnectionState.NOT_INITIALIZED
+        self.state = ConnectionState.DISCONNECTED
 
     def connectionMade(self):
         print("A client connected!")
