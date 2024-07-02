@@ -23,7 +23,6 @@ class NotInitializedHandler(Handler):
             return
         account = self.db.register_user(message)
         if self._is_successful(account):
-            self._send_error(ConnectionFailure("Account created successfully"))
             self.handle_credentials(Credentials(message.name, message.password))
         else:
             self._send_error(account)
