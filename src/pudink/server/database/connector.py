@@ -13,19 +13,21 @@ from pudink.common.model import (
 
 class GameDatabase:
     _instance = None
+    _conn: sqlite3.Connection
+    _cursor: sqlite3.Cursor
 
-    def __new__(cls, db_file):
+    def __new__(cls, db_file: str):
         if cls._instance is None:
             cls._instance = super().__new__(cls)
-            cls._instance._db_file = db_file
-            cls._instance._conn = None
-            cls._instance._cursor = None
-            cls._instance._initialize_database()
+            conn, cursor = cls._instance._initialize_database(db_file)
+            cls._instance._conn = conn
+            cls._instance._cursor = cursor
         return cls._instance
 
-    def _initialize_database(self) -> None:
-        self._conn = sqlite3.connect(self._db_file)
-        self._cursor = self._conn.cursor()
+    @staticmethod
+    def _initialize_database(file: str) -> tuple[sqlite3.Connection, sqlite3.Cursor]:
+        conn = sqlite3.connect(file)
+        cursor = conn.cursor()
         print(os.path.dirname(__file__))
         sql_file_location = os.path.join(
             os.path.dirname(__file__), "init_game_database.sql"
@@ -34,9 +36,10 @@ class GameDatabase:
         with open(sql_file_location) as sql_file:
             sql_script = sql_file.read()
 
-        self._cursor.executescript(sql_script)
-        self._conn.commit()
+        cursor.executescript(sql_script)
+        conn.commit()
         print("Database initialized successfully")
+        return conn, cursor
 
     def register_user(
         self, account_request: NewAccount
@@ -64,8 +67,14 @@ class GameDatabase:
                 f"User {account_request.name} registered successfully with character ID {character_id}"
             )
 
+            id = self._cursor.lastrowid
+            if id is None:
+                raise sqlite3.IntegrityError(
+                    "Failed to register user, could not get ID"
+                )
+
             return PlayerInitialization(
-                self._cursor.lastrowid,
+                str(id),
                 account_request.character,
             )
         except sqlite3.IntegrityError as e:
@@ -81,7 +90,9 @@ class GameDatabase:
         self._cursor.execute(query, params)
 
         if row := self._cursor.fetchone():
-            return PlayerInitialization(row[0], self._get_character_by_id(row[1]))
+            character = self._get_character_by_id(row[1])
+            if character is not None:
+                return PlayerInitialization(row[0], character)
 
         return ConnectionFailure("Failed to authenticate user")
 

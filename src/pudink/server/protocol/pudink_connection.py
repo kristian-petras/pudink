@@ -1,25 +1,35 @@
+from typing import Optional
 from twisted.internet import protocol
 
-from pudink.common.model import PlayerDisconnect
+from pudink.common.model import Player, PlayerDisconnect
 from pudink.server.database.connector import GameDatabase
 from pudink.server.handler.dispatcher import MessageDispatcher
 from pudink.server.protocol.connection_states import ConnectionState
+from pudink.server.protocol.pudink_server import PudinkServer
+from twisted.python.failure import Failure
+from twisted.internet.interfaces import ITransport
 
 
 class PudinkConnection(protocol.Protocol):
+    factory: PudinkServer
+    db: GameDatabase
+    player: Optional[Player]
+    message_dispatcher: MessageDispatcher
+    state: ConnectionState
+    transport: ITransport
 
-    def __init__(self, db: GameDatabase, factory):
+    def __init__(self, db: GameDatabase, factory: PudinkServer) -> None:
         self.factory = factory
         self.db = db
         self.player = None
         self.message_dispatcher = MessageDispatcher(self)
         self.state = ConnectionState.DISCONNECTED
 
-    def connectionMade(self):
+    def connectionMade(self) -> None:
         print("A client connected!")
         self.factory.clients.append(self)
 
-    def connectionLost(self, reason):
+    def connectionLost(self, reason: Failure) -> None:
         print("Lost a client!")
         self.factory.clients.remove(self)
 
@@ -28,5 +38,5 @@ class PudinkConnection(protocol.Protocol):
 
         self.state = ConnectionState.DISCONNECTED
 
-    def dataReceived(self, data):
+    def dataReceived(self, data: bytes) -> None:
         self.message_dispatcher.dispatch_message(data)

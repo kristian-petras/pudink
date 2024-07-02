@@ -1,12 +1,17 @@
 from pudink.common.translator import MessageTranslator
+from pudink.server.handler.handler import BaseHandler
 from pudink.server.handler.handlers.connected_handler import ConnectedHandler
 from pudink.server.handler.handlers.disconnected_handler import DisconnectedHandler
 from pudink.server.handler.handlers.disconnected_handler import DisconnectedHandler
 from pudink.server.protocol.connection_states import ConnectionState
+from pudink.server.protocol.pudink_connection import PudinkConnection
 
 
 class MessageDispatcher:
-    def __init__(self, connection):
+    connection: PudinkConnection
+    handlers: dict[ConnectionState, BaseHandler]
+
+    def __init__(self, connection) -> None:
         self.connection = connection
         self.handlers = {
             ConnectionState.DISCONNECTED: DisconnectedHandler(self.connection),

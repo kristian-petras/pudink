@@ -6,33 +6,39 @@ from pudink.common.model import (
     PlayerInitialization,
 )
 from pudink.common.translator import MessageTranslator
-from pudink.server.handler.handler import Handler
+from pudink.server.handler.handler import BaseHandler
 from pudink.server.protocol.connection_states import ConnectionState
+from pudink.server.protocol.pudink_connection import PudinkConnection
 
 
-class DisconnectedHandler(Handler):
-    def __init__(self, connection):
+class DisconnectedHandler(BaseHandler):
+    def __init__(self, connection: PudinkConnection):
         super().__init__(connection)
 
-    def handle_new_account(self, message: NewAccount):
+    def handle_new_account(self, message: NewAccount) -> None:
         if len(message.name) < 3 or len(message.password) < 3:
-            fail = ConnectionFailure(
-                "Name and password must be at least 3 characters long"
+            self._send_error(
+                ConnectionFailure(
+                    "Name and password must be at least 3 characters long"
+                )
             )
-            self._send_error(fail)
             return
         account = self.db.register_user(message)
-        if self._is_successful(account):
+        if type(account) == PlayerInitialization:
             self.handle_credentials(Credentials(message.name, message.password))
-        else:
+        elif type(account) == ConnectionFailure:
             self._send_error(account)
+        else:
+            self._send_error(
+                ConnectionFailure(f"Invalid account creation, received: {account}")
+            )
 
-    def handle_credentials(self, message: Credentials):
+    def handle_credentials(self, message: Credentials) -> None:
         print("Authenticating player with credentials: ", message)
 
         player = self.db.authenticate_user(message)
 
-        if not self._is_successful(player):
+        if isinstance(player, ConnectionFailure):
             self._send_error(player)
             return
 
@@ -51,19 +57,16 @@ class DisconnectedHandler(Handler):
         self.broadcast_new_player()
         self.connection.state = ConnectionState.CONNECTED
 
-    def _is_player_connected(self, player):
+    def _is_player_connected(self, player) -> bool:
         connected_players = [
             client.player.id
             for client in self.connection.factory.clients
-            if client.state == ConnectionState.CONNECTED
+            if client.state == ConnectionState.CONNECTED and client.player
         ]
         return player.id in connected_players
 
-    def _is_player_instance_missing(self, player):
+    def _is_player_instance_missing(self, player) -> bool:
         return (
             player.id not in self.connection.factory.players
             or self.connection.player is None
         )
-
-    def _is_successful(self, player):
-        return not isinstance(player, ConnectionFailure)
