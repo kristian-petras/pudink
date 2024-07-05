@@ -1,8 +1,12 @@
-from typing import Callable, Optional
+from __future__ import annotations
+from typing import Any, Callable, Optional, TYPE_CHECKING
 from pudink.client.controller.base_controller import BaseController
 from pudink.client.model.world_state import WorldState
 from pudink.client.frontend.scene_manager import SceneManager
-from pudink.client.protocol.factory import ClientCallback, PudinkClientFactory
+
+if TYPE_CHECKING:
+    from pudink.client.protocol.client_factory import PudinkClientFactory
+from pudink.client.protocol.client import ClientCallback
 
 
 from pudink.common.model import ChatMessage, Player, PlayerDisconnect, PlayerUpdate
@@ -20,9 +24,8 @@ class WorldController(BaseController):
         scene_manager: SceneManager,
         world_state: WorldState,
     ) -> None:
-        super().__init__(factory, scene_manager)
+        super().__init__(factory, scene_manager, "world")
         self.world_state = world_state
-        self.scene = "world"
         self.factory.registerCallback(
             ClientCallback.DATA_RECEIVED, self._on_update, self.scene
         )
@@ -52,7 +55,7 @@ class WorldController(BaseController):
         chat_message = ChatMessage(player.id, message)
         self.send_message(chat_message)
 
-    def _on_update(self, message: any) -> None:
+    def _on_update(self, message: Any) -> None:
         if type(message) == PlayerDisconnect:
             self.player_leave(message)
         elif type(message) == Player:
@@ -84,7 +87,7 @@ class WorldController(BaseController):
             self.on_player_leave_callback(disconnected_player)
 
     def player_update(self, update: PlayerUpdate) -> None:
-        self.world_state.add_player(update)
+        self.world_state.update_player(update)
         if self.on_player_update_callback:
             self.on_player_update_callback(update)
 

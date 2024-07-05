@@ -1,48 +1,23 @@
-from enum import Enum
-from typing import Any, Callable
-import json
+from pudink.client.protocol.client import ClientCallback, PudinkClient
+from pudink.common.model import ConnectionFailure
+
 
 from twisted.internet import protocol
 
-from pudink.common.model import ConnectionFailure, PlayerUpdate
-from pudink.common.translator import MessageTranslator
+from twisted.internet.interfaces import IAddress
 
-
-class ClientCallback(Enum):
-    STARTED_CONNECTING = 0
-    CONNECTION_FAILED = 1
-    CONNECTION_SUCCESS = 2
-    DATA_RECEIVED = 3
-
-    def __str__(self):
-        return self.name.lower().replace("_", " ")
-
-
-class PudinkClient(protocol.Protocol):
-    def __init__(self, registeredCallbacks) -> None:
-        super().__init__()
-        self.registered_callbacks = registeredCallbacks
-
-    def connectionMade(self):
-        self.factory.process_callback(ClientCallback.CONNECTION_SUCCESS, "Connected!")
-
-    def dataReceived(self, data):
-        message = MessageTranslator.decode(data)
-        self.factory.process_callback(ClientCallback.DATA_RECEIVED, message)
-
-    def connectionLost(self, reason):
-        error = ConnectionFailure(reason.getErrorMessage())
-        self.factory.process_callback(ClientCallback.CONNECTION_FAILED, error)
-
-    def send_message(self, message: any) -> None:
-        if type(message) != PlayerUpdate:
-            print(f"Sending message: {message}")
-        data = MessageTranslator.encode(message)
-        self.transport.write(data)
+from typing import Any, Callable, Optional
 
 
 class PudinkClientFactory(protocol.ClientFactory):
-    protocol = PudinkClient
+    protocol: type[PudinkClient] = PudinkClient
+    client: Optional[PudinkClient]
+    host: str
+    port: int
+    scene: Optional[str]
+    registeredCallbacks: dict[ClientCallback, dict[str, Callable[[Any], None]]]
+    connecting: bool
+    connected: bool
 
     def __init__(self, host: str = "localhost", port: int = 8000):
         self.client = None
@@ -71,7 +46,7 @@ class PudinkClientFactory(protocol.ClientFactory):
     def startedConnecting(self, connector):
         self.process_callback(ClientCallback.STARTED_CONNECTING, "Connecting")
 
-    def process_callback(self, event: ClientCallback, data: any) -> None:
+    def process_callback(self, event: ClientCallback, data: Any) -> None:
         if event == ClientCallback.STARTED_CONNECTING:
             self.connecting = True
             self.connected = False
@@ -92,7 +67,7 @@ class PudinkClientFactory(protocol.ClientFactory):
         else:
             self.registeredCallbacks[event] = {scene: callback}
 
-    def buildProtocol(self, addr):
+    def buildProtocol(self, addr: IAddress) -> PudinkClient:
         print(f"Building protocol for {addr}")
         client = PudinkClient(self.registeredCallbacks)
         client.factory = self
@@ -105,7 +80,7 @@ class PudinkClientFactory(protocol.ClientFactory):
         from twisted.internet import reactor
 
         if not self.connecting and not self.connected:
-            reactor.connectTCP(host, port, self)
+            reactor.connectTCP(host, port, self)  # type: ignore
 
     def set_scene(self, scene):
         self.scene = scene

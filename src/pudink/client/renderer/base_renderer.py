@@ -1,4 +1,4 @@
-from typing import Callable
+from typing import Callable, Optional
 from pyglet.graphics import Batch
 from pyglet.graphics import Group
 from pyglet.window import Window
@@ -17,8 +17,8 @@ class BaseRenderer:
         self.window = window
         self.asset_manager = asset_manager
         self.batch = Batch()
-        self.foreground_group = Group()
-        self.background_group = Group()
+        self.foreground_group = Group(1)
+        self.background_group = Group(0)
 
         self.background = asset_manager.get_background()
         self.background_sprite = Sprite(
@@ -42,18 +42,18 @@ class BaseRenderer:
         for handler in self._handlers:
             handler.enabled = False
 
-    def after_scene_switch(self, _):
+    def after_scene_switch(self):
         for handler in self._handlers:
             handler.enabled = True
             self.window.push_handlers(handler)
 
     def create_entry(
         self,
-        text,
-        x,
-        y,
-        handler: Callable[[str], None] = None,
-        width=150,
+        text: str,
+        x: int,
+        y: int,
+        handler: Optional[Callable[[str], None]] = None,
+        width: int = 200,
         password: bool = False,
     ) -> TextEntry:
         if password:

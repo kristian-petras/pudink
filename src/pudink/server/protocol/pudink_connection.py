@@ -8,9 +8,9 @@ from pudink.server.database.connector import GameDatabase
 from pudink.server.handler.dispatcher import MessageDispatcher
 from twisted.python.failure import Failure
 from twisted.internet.interfaces import ITransport
+from pudink.server.protocol.connection_states import ConnectionState
 
 if typing.TYPE_CHECKING:
-    from pudink.server.protocol.connection_states import ConnectionState
     from pudink.server.protocol.pudink_server import PudinkServer
 
 

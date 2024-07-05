@@ -1,7 +1,9 @@
+from typing import Any, Callable, Optional
 from pudink.client.controller.base_controller import BaseController
 from pudink.client.frontend.scene_manager import SceneManager
 from pudink.client.model.world_state import WorldState
-from pudink.client.protocol.factory import ClientCallback, PudinkClientFactory
+from pudink.client.protocol.client_factory import PudinkClientFactory
+from pudink.client.protocol.client import ClientCallback
 from pudink.common.model import (
     Character,
     ConnectionFailure,
@@ -12,14 +14,18 @@ from pudink.common.model import (
 
 
 class MenuController(BaseController):
+    on_fail_callback: Optional[Callable[[str], None]]
+    _world_state: WorldState
+    factory: PudinkClientFactory
+    scene_manager: SceneManager
+
     def __init__(
         self,
         factory: PudinkClientFactory,
         scene_manager: SceneManager,
         world_state: WorldState,
     ) -> None:
-        super().__init__(factory, scene_manager)
-        self.scene = "menu"
+        super().__init__(factory, scene_manager, "menu")
         self.on_fail_callback = None
         self._world_state = world_state
 
@@ -52,9 +58,12 @@ class MenuController(BaseController):
     def login(self, username: str, password: str) -> None:
         self.send_message(Credentials(username, password))
 
-    def _on_data_received(self, data: any) -> None:
+    def _on_data_received(self, data: Any) -> None:
         if type(data) == ConnectionFailure:
-            self.on_fail_callback(data.message)
+            if self.on_fail_callback is not None:
+                self.on_fail_callback(data.message)
+            else:
+                print(f"Received connection failure but no callback: {data.message}")
         elif type(data) == PlayerSnapshot:
             self._world_state.initialize_world(data)
             self.switch_screen("world")

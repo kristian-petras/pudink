@@ -6,7 +6,7 @@ from pudink.common.model import Player, PlayerDisconnect, PlayerSnapshot, Player
 
 @dataclass
 class WorldState:
-    current_player_id: str = None
+    current_player_id: Optional[str] = None
     players: Dict[str, Player] = field(default_factory=dict)
 
     def add_player(self, player: Player) -> None:

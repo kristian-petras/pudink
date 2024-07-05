@@ -1,5 +1,5 @@
 from pudink.client.game import PudinkGame
-from pudink.client.protocol.factory import PudinkClientFactory
+from pudink.client.protocol.client_factory import PudinkClientFactory
 from pyglet.window import Window
 
 

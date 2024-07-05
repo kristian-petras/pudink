@@ -5,6 +5,17 @@ from pyglet.gl import glBindTexture, GL_TEXTURE_MAG_FILTER, GL_NEAREST, glTexPar
 
 
 class AssetManager:
+    _head_mapping: dict[int, Texture]
+    _body_mapping: dict[int, Texture]
+    _background: Texture
+    _button_pressed: Texture
+    _button_depressed: Texture
+    _button_hover: Texture
+    _title: Texture
+
+    _left: Texture
+    _right: Texture
+
     def __init__(self) -> None:
         self._head_mapping = {
             1: self._init_image("simple_head.png"),
@@ -29,16 +40,14 @@ class AssetManager:
         self._left = self._init_image("left.png")
         self._right = self._init_image("right.png")
 
-    def get_head(self, head_id: int) -> Optional[Texture]:
+    def get_head(self, head_id: int) -> Texture:
         if head_id not in self._head_mapping:
-            print(f"Head id {head_id} not found")
-            return None
+            raise ValueError(f"Head id {head_id} not found")
         return self._head_mapping[head_id]
 
-    def get_body(self, body_id: int) -> Optional[Texture]:
+    def get_body(self, body_id: int) -> Texture:
         if body_id not in self._body_mapping:
-            print(f"Body id {body_id} not found")
-            return None
+            raise ValueError(f"Body id {body_id} not found")
         return self._body_mapping[body_id]
 
     def _init_image(self, path: str) -> Texture:
@@ -46,7 +55,7 @@ class AssetManager:
         self._texture_set_mag_filter_nearest(img.get_texture())
         return img
 
-    def _texture_set_mag_filter_nearest(self, texture):
+    def _texture_set_mag_filter_nearest(self, texture: Texture) -> None:
         glBindTexture(texture.target, texture.id)
         glTexParameteri(texture.target, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
         glBindTexture(texture.target, 0)

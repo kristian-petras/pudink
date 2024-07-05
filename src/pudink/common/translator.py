@@ -29,7 +29,7 @@ class MessageTranslator:
             "player_snapshot": MessageTranslator._decode_player_snapshot,
             "chat_message": MessageTranslator._decode_chat_message,
         }
-        return decode_map[decoded["type"]](message)
+        return decode_map[decoded["type"]](decoded)
 
     @staticmethod
     def _decode_error(message: dict) -> ConnectionFailure:

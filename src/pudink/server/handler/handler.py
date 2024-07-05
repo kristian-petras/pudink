@@ -1,4 +1,5 @@
 from __future__ import annotations
+import json
 from typing import Any, Callable
 import typing
 from pudink.common.model import (
@@ -77,8 +78,8 @@ class BaseHandler:
         self.broadcast_message(self.connection.player)
 
     def broadcast_message(self, message: Any) -> None:
-        if type(message) == bytes:
-            message = MessageTranslator.decode(message)
+        if type(message) != bytes:
+            message = MessageTranslator.encode(message)
         for c in self.factory.clients:
             if c != self.connection:
                 c.transport.write(message)
