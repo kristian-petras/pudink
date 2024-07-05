@@ -1,4 +1,6 @@
+from __future__ import annotations
 from typing import Any, Callable
+import typing
 from pudink.common.model import (
     ConnectionFailure,
     NewAccount,
@@ -10,8 +12,10 @@ from pudink.common.model import (
 )
 from pudink.common.translator import MessageTranslator
 from pudink.server.database.connector import GameDatabase
-from pudink.server.protocol.pudink_connection import PudinkConnection
-from pudink.server.protocol.pudink_server import PudinkServer
+
+if typing.TYPE_CHECKING:
+    from pudink.server.protocol.pudink_connection import PudinkConnection
+    from pudink.server.protocol.pudink_server import PudinkServer
 
 
 class BaseHandler:

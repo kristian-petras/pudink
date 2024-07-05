@@ -1,3 +1,5 @@
+from __future__ import annotations
+import typing
 from pudink.common.model import (
     NewAccount,
     Credentials,
@@ -8,7 +10,9 @@ from pudink.common.model import (
 from pudink.common.translator import MessageTranslator
 from pudink.server.handler.handler import BaseHandler
 from pudink.server.protocol.connection_states import ConnectionState
-from pudink.server.protocol.pudink_connection import PudinkConnection
+
+if typing.TYPE_CHECKING:
+    from pudink.server.protocol.pudink_connection import PudinkConnection
 
 
 class DisconnectedHandler(BaseHandler):
