@@ -1,13 +1,15 @@
-from pyglet.text import Label
-from pyglet.sprite import Sprite
 from pyglet.graphics import Batch, Group
 from pyglet.image import Texture
 from pyglet.shapes import Circle
+from pyglet.sprite import Sprite
+from pyglet.text import Label
 
 from pudink.client.frontend.color_palette import ColorPalette
 
 
 class PlayerDisplay:
+    chat_bubbles: list[Label]
+
     def __init__(
         self,
         x: int,

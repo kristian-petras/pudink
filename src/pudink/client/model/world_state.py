@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import Dict, Optional, Tuple
+from typing import Dict, Optional
 
 from pudink.common.model import Player, PlayerDisconnect, PlayerSnapshot, PlayerUpdate
 

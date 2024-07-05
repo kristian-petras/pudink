@@ -1,4 +1,4 @@
-from pudink.common.model import NewAccount, Credentials, PlayerUpdate, ChatMessage
+from pudink.common.model import ChatMessage, PlayerUpdate
 from pudink.server.handler.handler import BaseHandler
 
 

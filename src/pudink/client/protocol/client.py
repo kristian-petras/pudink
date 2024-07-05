@@ -1,12 +1,14 @@
 from __future__ import annotations
+
+import typing
 from enum import Enum
 from typing import Any
-import typing
 
 from twisted.internet import protocol
 
 if typing.TYPE_CHECKING:
     from pudink.client.protocol.client_factory import PudinkClientFactory
+
 from pudink.common.model import ConnectionFailure, PlayerUpdate
 from pudink.common.translator import MessageTranslator
 
@@ -40,7 +42,7 @@ class PudinkClient(protocol.Protocol):
         self.factory.process_callback(ClientCallback.CONNECTION_FAILED, error)
 
     def send_message(self, message: Any) -> None:
-        if type(message) != PlayerUpdate:
+        if not isinstance(message, PlayerUpdate):
             print(f"Sending message: {message}")
         data = MessageTranslator.encode(message)
         self.transport.write(data)  # type: ignore

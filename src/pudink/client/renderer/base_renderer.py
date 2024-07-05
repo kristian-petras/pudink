@@ -1,18 +1,20 @@
 from typing import Callable, Optional
-from pyglet.graphics import Batch
-from pyglet.graphics import Group
-from pyglet.window import Window
+
+from pyglet.graphics import Batch, Group
+from pyglet.gui import PushButton, TextEntry
+from pyglet.image import Texture
 from pyglet.sprite import Sprite
+from pyglet.text import Label
+from pyglet.window import Window
+
 from pudink.client.frontend.asset_manager import AssetManager
 from pudink.client.frontend.color_palette import ColorPalette
-from pyglet.gui import TextEntry, PushButton
-from pyglet.text import Label
-from pyglet.image import Texture
-
 from pudink.client.pyglet.password_text_entry import PasswordTextEntry
 
 
 class BaseRenderer:
+    _handlers: list
+
     def __init__(self, window: Window, asset_manager: AssetManager) -> None:
         self.window = window
         self.asset_manager = asset_manager

@@ -1,7 +1,6 @@
-from typing import Optional
-from pyglet.resource import image
+from pyglet.gl import GL_NEAREST, GL_TEXTURE_MAG_FILTER, glBindTexture, glTexParameteri
 from pyglet.image import Texture
-from pyglet.gl import glBindTexture, GL_TEXTURE_MAG_FILTER, GL_NEAREST, glTexParameteri
+from pyglet.resource import image
 
 
 class AssetManager:

@@ -4,10 +4,10 @@ from typing import Optional, Union
 
 from pudink.common.model import (
     Character,
-    PlayerInitialization,
     ConnectionFailure,
-    NewAccount,
     Credentials,
+    NewAccount,
+    PlayerInitialization,
 )
 
 

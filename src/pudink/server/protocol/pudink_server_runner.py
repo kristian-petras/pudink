@@ -1,14 +1,11 @@
-import signal, os
-
-from twisted.internet import reactor
-
-from pudink.server.protocol.pudink_server import PudinkServer
-from pudink.server.database.connector import GameDatabase
-
-from twisted.internet.error import ReactorNotRunning
+import signal
 from sqlite3 import ProgrammingError
 
-from pudink.common.model import Character, NewAccount
+from twisted.internet import reactor
+from twisted.internet.error import ReactorNotRunning
+
+from pudink.server.database.connector import GameDatabase
+from pudink.server.protocol.pudink_server import PudinkServer
 
 
 class PudinkServerRunner:

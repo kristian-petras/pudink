@@ -1,13 +1,14 @@
 from __future__ import annotations
-from typing import Optional
+
 import typing
+
 from twisted.internet import protocol
+from twisted.internet.interfaces import ITransport
+from twisted.python.failure import Failure
 
 from pudink.common.model import Player, PlayerDisconnect
 from pudink.server.database.connector import GameDatabase
 from pudink.server.handler.dispatcher import MessageDispatcher
-from twisted.python.failure import Failure
-from twisted.internet.interfaces import ITransport
 from pudink.server.protocol.connection_states import ConnectionState
 
 if typing.TYPE_CHECKING:
@@ -17,7 +18,7 @@ if typing.TYPE_CHECKING:
 class PudinkConnection(protocol.Protocol):
     factory: PudinkServer
     db: GameDatabase
-    player: Optional[Player]
+    player: Player | None
     message_dispatcher: MessageDispatcher
     state: ConnectionState
     transport: ITransport

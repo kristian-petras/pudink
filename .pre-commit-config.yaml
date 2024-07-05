@@ -14,12 +14,14 @@ repos:
     -   id: check-added-large-files
     -   id: debug-statements
     -   id: name-tests-test
-    -   id: requirements-txt-fixer
     -   id: check-merge-conflict
     -   id: check-executables-have-shebangs
     -   id: check-json
     -   id: check-case-conflict
     -   id: check-merge-conflict
+    -   id: mixed-line-ending
+        args: ['--fix=lf']
+
 
 -   repo: https://github.com/PyCQA/autoflake
     rev: v2.3.1

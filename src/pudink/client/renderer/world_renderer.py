@@ -1,15 +1,13 @@
 import pyglet
+from pyglet.gui import TextEntry
+from pyglet.sprite import Sprite
+from pyglet.window import Window, key
 
-from pudink.client.frontend.asset_manager import AssetManager
 from pudink.client.controller.world_controller import WorldController
-from pudink.client.frontend.color_palette import ColorPalette
+from pudink.client.frontend.asset_manager import AssetManager
 from pudink.client.renderer.base_renderer import BaseRenderer
 from pudink.client.renderer.player_display import PlayerDisplay
 from pudink.common.model import ChatMessage, Player, PlayerDisconnect, PlayerUpdate
-from pyglet.window import Window, key
-from pyglet.graphics import Batch, Group
-from pyglet.gui import TextEntry
-from pyglet.sprite import Sprite
 
 
 class WorldRenderer(BaseRenderer):
@@ -83,7 +81,7 @@ class WorldRenderer(BaseRenderer):
 
         movement_speed = 300 * dt
         # Calculate the movement in each direction
-        dx = dy = 0
+        dx = dy = 0.0
         if self._keys[pyglet.window.key.W]:
             dy += movement_speed
         if self._keys[pyglet.window.key.S]:

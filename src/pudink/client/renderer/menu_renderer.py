@@ -1,4 +1,5 @@
 from pyglet.window import Window
+
 from pudink.client.controller.menu_controller import MenuController
 from pudink.client.frontend.asset_manager import AssetManager
 from pudink.client.renderer.base_renderer import BaseRenderer

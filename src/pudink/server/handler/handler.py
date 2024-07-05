@@ -1,15 +1,16 @@
 from __future__ import annotations
-import json
-from typing import Any, Callable
+
 import typing
+from typing import Any, Callable
+
 from pudink.common.model import (
-    ConnectionFailure,
-    NewAccount,
-    Credentials,
-    PlayerUpdate,
-    PlayerSnapshot,
     ChatMessage,
+    ConnectionFailure,
+    Credentials,
+    NewAccount,
     PlayerDisconnect,
+    PlayerSnapshot,
+    PlayerUpdate,
 )
 from pudink.common.translator import MessageTranslator
 from pudink.server.database.connector import GameDatabase
@@ -38,23 +39,22 @@ class BaseHandler:
         }
 
     def handle_message(self, message: Any) -> None:
+        if not type(message) in self.message_handlers:
+            raise NotImplementedError(f"Unhandled message type: {type(message)}")
         action = self.message_handlers[type(message)]
-        if not action:
-            raise NotImplemented(f"Unhandled message type: {type(message)}")
-
         action(message)
 
     def handle_new_account(self, message: NewAccount) -> None:
-        raise NotImplemented()
+        raise NotImplementedError()
 
     def handle_credentials(self, message: Credentials) -> None:
-        raise NotImplemented()
+        raise NotImplementedError()
 
     def handle_player_update(self, message: PlayerUpdate) -> None:
-        raise NotImplemented()
+        raise NotImplementedError()
 
     def handle_chat_message(self, message: ChatMessage) -> None:
-        raise NotImplemented()
+        raise NotImplementedError()
 
     def handle_player_disconnect(self, message: PlayerDisconnect) -> None:
         self.broadcast_message(message)
@@ -78,7 +78,7 @@ class BaseHandler:
         self.broadcast_message(self.connection.player)
 
     def broadcast_message(self, message: Any) -> None:
-        if type(message) != bytes:
+        if isinstance(message, bytes):
             message = MessageTranslator.encode(message)
         for c in self.factory.clients:
             if c != self.connection:

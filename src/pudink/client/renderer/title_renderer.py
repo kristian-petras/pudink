@@ -1,11 +1,8 @@
-from pudink.client.frontend.asset_manager import AssetManager
-from pudink.client.controller.title_controller import TitleController
-from pudink.client.renderer.base_renderer import BaseRenderer
 from pyglet.window import Window
-from pyglet.text import Label
-from pyglet.gui import TextEntry, PushButton
 
-from pudink.client.frontend.color_palette import ColorPalette
+from pudink.client.controller.title_controller import TitleController
+from pudink.client.frontend.asset_manager import AssetManager
+from pudink.client.renderer.base_renderer import BaseRenderer
 
 
 class TitleRenderer(BaseRenderer):

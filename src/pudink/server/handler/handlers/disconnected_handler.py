@@ -1,13 +1,14 @@
 from __future__ import annotations
+
 import typing
+
 from pudink.common.model import (
-    NewAccount,
-    Credentials,
     ConnectionFailure,
+    Credentials,
+    NewAccount,
     Player,
     PlayerInitialization,
 )
-from pudink.common.translator import MessageTranslator
 from pudink.server.handler.handler import BaseHandler
 from pudink.server.protocol.connection_states import ConnectionState
 
@@ -28,9 +29,9 @@ class DisconnectedHandler(BaseHandler):
             )
             return
         account = self.db.register_user(message)
-        if type(account) == PlayerInitialization:
+        if isinstance(account, PlayerInitialization):
             self.handle_credentials(Credentials(message.name, message.password))
-        elif type(account) == ConnectionFailure:
+        elif isinstance(account, ConnectionFailure):
             self._send_error(account)
         else:
             self._send_error(

@@ -1,10 +1,11 @@
 import json
 from typing import Any
+
 from pudink.common.model import (
     Character,
     ChatMessage,
-    Credentials,
     ConnectionFailure,
+    Credentials,
     NewAccount,
     Player,
     PlayerDisconnect,

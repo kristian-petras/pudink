@@ -1,12 +1,10 @@
-from pudink.client.protocol.client import ClientCallback, PudinkClient
-from pudink.common.model import ConnectionFailure
-
+from typing import Any, Callable, Optional
 
 from twisted.internet import protocol
-
 from twisted.internet.interfaces import IAddress
 
-from typing import Any, Callable, Optional
+from pudink.client.protocol.client import ClientCallback, PudinkClient
+from pudink.common.model import ConnectionFailure
 
 
 class PudinkClientFactory(protocol.ClientFactory):

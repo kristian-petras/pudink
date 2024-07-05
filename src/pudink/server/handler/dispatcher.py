@@ -1,9 +1,10 @@
 from __future__ import annotations
+
 import typing
+
 from pudink.common.translator import MessageTranslator
 from pudink.server.handler.handler import BaseHandler
 from pudink.server.handler.handlers.connected_handler import ConnectedHandler
-from pudink.server.handler.handlers.disconnected_handler import DisconnectedHandler
 from pudink.server.handler.handlers.disconnected_handler import DisconnectedHandler
 from pudink.server.protocol.connection_states import ConnectionState
 
@@ -25,7 +26,7 @@ class MessageDispatcher:
     def dispatch_message(self, message):
         handler = self.handlers[self.connection.state]
 
-        if type(message) == bytes:
+        if isinstance(message, bytes):
             message = MessageTranslator.decode(message)
 
         handler.handle_message(message)
