@@ -39,10 +39,10 @@ jobs:
       - name: Run tests
         run: pdm run pytest
 
-      - name: Create Executable ${{ matrix.os }} ${{ matrix.python-version }}
+      - name: Create client executable ${{ matrix.os }} ${{ matrix.python-version }}
         uses: sayyid5416/pyinstaller@v1
         with:
           python_ver: ${{ matrix.python-version }}
-          spec: 'src/pudink/__main__.py'
+          spec: 'src/pudink/client/__main__.py'
           upload_exe_with_name: 'pudink-${{ matrix.os }}'
           options: --onefile, --name "pudink", --windowed,
