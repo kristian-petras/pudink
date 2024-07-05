@@ -17,7 +17,6 @@ license = {text = "MIT"}
 requires = ["pdm-backend"]
 build-backend = "pdm.backend"
 
-
 [tool.pdm]
 distribution = true
 
@@ -34,4 +33,5 @@ dev = [
     "isort>=5.13.2",
     "pre-commit>=3.7.0",
     "pyinstaller>=6.5.0",
+    "flake8-bugbear>=24.4.26",
 ]
