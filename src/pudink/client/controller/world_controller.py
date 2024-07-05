@@ -26,10 +26,10 @@ class WorldController(BaseController):
     ) -> None:
         super().__init__(factory, scene_manager, "world")
         self.world_state = world_state
-        self.factory.registerCallback(
+        self.register_callback(
             ClientCallback.DATA_RECEIVED, self._on_update, self.scene
         )
-        self.factory.registerCallback(
+        self.register_callback(
             ClientCallback.CONNECTION_FAILED, self._on_disconnect, self.scene
         )
 

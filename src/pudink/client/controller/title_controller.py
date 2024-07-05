@@ -12,17 +12,17 @@ class TitleController(BaseController):
         super().__init__(factory, scene_manager, "title")
         self.on_update_callback = None
 
-        self.factory.registerCallback(
+        self.register_callback(
             ClientCallback.STARTED_CONNECTING,
             self._on_connecting,
             self.scene,
         )
-        self.factory.registerCallback(
+        self.register_callback(
             ClientCallback.CONNECTION_SUCCESS,
             self._on_connect,
             self.scene,
         )
-        self.factory.registerCallback(
+        self.register_callback(
             ClientCallback.CONNECTION_FAILED,
             self._on_disconnect,
             self.scene,
@@ -30,7 +30,7 @@ class TitleController(BaseController):
 
     def connect(self, host: str, port: int) -> None:
         print(f"Connecting to {host}:{port}")
-        self.factory.connect(host, port)
+        self._factory.connect(host, port)
 
     def _on_connecting(self, message: str) -> None:
         print(f"Connecting... {message}")

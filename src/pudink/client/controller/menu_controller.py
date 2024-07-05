@@ -29,13 +29,13 @@ class MenuController(BaseController):
         self.on_fail_callback = None
         self._world_state = world_state
 
-        self.factory.registerCallback(
+        self.factory.register_callback(
             ClientCallback.CONNECTION_FAILED,
             self._on_disconnect,
             self.scene,
         )
 
-        self.factory.registerCallback(
+        self.factory.register_callback(
             ClientCallback.DATA_RECEIVED,
             self._on_data_received,
             self.scene,
