@@ -20,7 +20,7 @@ repos:
     -   id: check-case-conflict
     -   id: check-merge-conflict
     -   id: mixed-line-ending
-        args: ['--fix=auto']
+        args: ['--fix=lf']
 
 
 -   repo: https://github.com/PyCQA/autoflake
