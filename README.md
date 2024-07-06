@@ -3,19 +3,16 @@ Cozy hypersocial game in Python.
 
 1. Enter the host and port in the title screen to establish connection with the game server.
 
-<img src="/images/title.png" alt="image" width="300" height="auto">
-
-![Title screen](/images/title.png)
-
+<img src="/images/title.png" alt="Title screen" width="300" height="auto">
 
 2. Create a character and register with inserted credentials or log in if you have account created already.
     - Every registered character needs to have unique head/body combination.
 
-![Login screen](/images/login.png)
+<img src="/images/login.png" alt="Login screen" width="300" height="auto">
 
 3. Move in the game world by ```[WASD]``` and ```[enter]``` chat messages in the text entry on the bottom of the screen.
 
-![Game screen](/images/gameplay.png)
+<img src="/images/gameplay.png" alt="Gameplay screen" width="300" height="auto">
 
 ## How to run
 
