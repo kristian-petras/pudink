@@ -20,6 +20,24 @@ from pudink.client.renderer.world_renderer import WorldRenderer
 
 
 class PudinkGame:
+    """
+    Represents the main game class for Pudink. Initializes all game components and runs the game loop.
+
+    Attributes:
+        _factory (PudinkClientFactory): The client factory used for network communication.
+        _host (str): The host address to connect to.
+        _port (int): The port number to connect to.
+        _game_loop (LoopingCall): The looping call for the game tick.
+        _game_loop_job (Optional[Deferred[LoopingCall]]): The deferred job for the game loop.
+        _window (Window): The Pyglet window for rendering the game.
+
+    Args:
+        window (Window): The Pyglet window for rendering the game.
+        factory (PudinkClientFactory): The client factory used for network communication.
+        host (str, optional): The host address to connect to. Defaults to "localhost".
+        port (int, optional): The port number to connect to. Defaults to 8000.
+    """
+
     _factory: PudinkClientFactory
     _host: str
     _port: int
@@ -34,6 +52,15 @@ class PudinkGame:
         host: str = "localhost",
         port: int = 8000,
     ):
+        """
+        Initializes a new instance of the PudinkGame class.
+
+        Args:
+            window (Window): The Pyglet window for rendering the game.
+            factory (PudinkClientFactory): The client factory used for network communication.
+            host (str, optional): The host address to connect to. Defaults to "localhost".
+            port (int, optional): The port number to connect to. Defaults to 8000.
+        """
         print("Starting game")
         self._factory = factory
         self._host = host
@@ -70,6 +97,12 @@ class PudinkGame:
         print("Game started")
 
     def _game_tick(self):
+        """
+        Performs a single game tick.
+
+        This method is called by the game loop at a fixed interval.
+        It updates the game state, handles user input, and renders the game.
+        """
         pyglet.clock.tick()
         self._window.switch_to()
         self._window.dispatch_events()
@@ -77,10 +110,20 @@ class PudinkGame:
         self._window.flip()
 
     def run(self):
+        """
+        Runs the game.
+
+        This method starts the game loop and runs the Pyglet event loop.
+        """
         self._game_loop_job = self._game_loop.start(1.0 / 30.0)
         reactor.run()  # type: ignore
 
     def stop(self):
+        """
+        Stops the game.
+
+        This method stops the game loop, closes the window, and stops the reactor.
+        """
         self._game_loop.stop()
 
         if self._game_loop_job:
@@ -95,4 +138,9 @@ class PudinkGame:
             print("Reactor already stopped")
 
     def _connect(self):
+        """
+        Connects to the server.
+
+        This method establishes a TCP connection to the server using the specified host and port.
+        """
         reactor.connectTCP(self._host, self._port, self._factory)  # type: ignore

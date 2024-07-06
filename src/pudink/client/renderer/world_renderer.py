@@ -11,6 +11,22 @@ from pudink.common.model import ChatMessage, Player, PlayerDisconnect, PlayerUpd
 
 
 class WorldRenderer(BaseRenderer):
+    """
+    Renders the game world and handles player interactions.
+
+    Attributes:
+        _players (dict[str, PlayerDisplay]): A dictionary mapping player IDs to their corresponding PlayerDisplay objects.
+        _world_controller (WorldController): The controller for the game world.
+        _chat_entry (TextEntry): The text entry widget for chat messages.
+        _background_sprite (Sprite): The background sprite for the game world.
+        _keys (key.KeyStateHandler): The key state handler for keyboard input.
+
+    Args:
+        window (Window): The game window.
+        world_controller (WorldController): The controller for the game world.
+        asset_manager (AssetManager): The asset manager for loading game assets.
+    """
+
     _players: dict[str, PlayerDisplay]
     _world_controller: WorldController
 
@@ -25,6 +41,14 @@ class WorldRenderer(BaseRenderer):
         world_controller: WorldController,
         asset_manager: AssetManager,
     ) -> None:
+        """
+        Initializes the WorldRenderer.
+
+        Args:
+            window (Window): The game window.
+            world_controller (WorldController): The controller for the game world.
+            asset_manager (AssetManager): The asset manager for loading game assets.
+        """
         super().__init__(window, asset_manager)
         self._world_controller = world_controller
 
@@ -44,10 +68,22 @@ class WorldRenderer(BaseRenderer):
         self._keys = key.KeyStateHandler()
 
     def on_draw(self) -> None:
+        """
+        Called when the game window needs to be redrawn.
+        """
         super().on_draw()
         self.move_player(1 / 60)
 
     def _get_current_player(self) -> PlayerDisplay:
+        """
+        Returns the PlayerDisplay object for the current player.
+
+        Returns:
+            PlayerDisplay: The PlayerDisplay object for the current player.
+
+        Raises:
+            ValueError: If no current player is found or if the player is not found in the player display.
+        """
         player = self._world_controller.get_current_player()
         if player is None:
             raise ValueError("No current player found.")
@@ -56,6 +92,15 @@ class WorldRenderer(BaseRenderer):
         return self._players[player.id]
 
     def _chat_handler(self, text: str) -> None:
+        """
+        Handles chat messages entered by the player.
+
+        Args:
+            text (str): The text of the chat message.
+
+        Raises:
+            ValueError: If no current player is found.
+        """
         player = self._world_controller.get_current_player()
         if player is None:
             raise ValueError("No current player found.")
@@ -65,6 +110,9 @@ class WorldRenderer(BaseRenderer):
         self._chat_entry.value = ""
 
     def after_scene_switch(self) -> None:
+        """
+        Called after switching to the game scene.
+        """
         super().after_scene_switch()
         self.window.push_handlers(self._keys)
         players = self._world_controller.get_players()
@@ -76,6 +124,15 @@ class WorldRenderer(BaseRenderer):
                 self.on_player_update(update)
 
     def move_player(self, dt: float) -> None:
+        """
+        Moves the player based on keyboard input.
+
+        Args:
+            dt (float): The time since the last frame.
+
+        Returns:
+            None
+        """
         if self._chat_entry.focus:
             return
 
@@ -121,6 +178,12 @@ class WorldRenderer(BaseRenderer):
         self._world_controller.move_player(new_x, new_y)
 
     def on_player_join(self, player: Player) -> None:
+        """
+        Called when a player joins the game.
+
+        Args:
+            player (Player): The player that joined the game.
+        """
         print(f"Player {player.id} joined.")
         self._players[player.id] = PlayerDisplay(
             player.x,
@@ -132,13 +195,31 @@ class WorldRenderer(BaseRenderer):
         )
 
     def on_player_leave(self, disconnect: PlayerDisconnect) -> None:
+        """
+        Called when a player leaves the game.
+
+        Args:
+            disconnect (PlayerDisconnect): The player that disconnected.
+        """
         print(f"Player with id {disconnect.id} disconnected.")
         self._players.pop(disconnect.id)
 
     def on_player_update(self, player: PlayerUpdate) -> None:
+        """
+        Called when a player's position is updated.
+
+        Args:
+            player (PlayerUpdate): The updated player information.
+        """
         self._players[player.id].move(player.x, player.y)
 
     def on_chat_message(self, chat_message: ChatMessage) -> None:
+        """
+        Called when a chat message is received.
+
+        Args:
+            chat_message (ChatMessage): The received chat message.
+        """
         player = self._players[chat_message.player_id]
         player.create_chat_bubble(chat_message.message)
         pyglet.clock.schedule_once(player.pop_chat_bubble, 5)

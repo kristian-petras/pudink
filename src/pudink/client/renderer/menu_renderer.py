@@ -135,6 +135,9 @@ class MenuRenderer(BaseRenderer):
         )
 
     def _next_head(self) -> None:
+        """
+        Switches to the next head texture. Cycles over to the first head texture if the current head texture is the last one.
+        """
         self.head_counter += 1
         if self.head_counter > 5:
             self.head_counter = 1
@@ -146,6 +149,9 @@ class MenuRenderer(BaseRenderer):
         )
 
     def _next_body(self) -> None:
+        """
+        Switches to the next body texture. Cycles over to the first body texture if the current body texture is the last one.
+        """
         self.body_counter += 1
         if self.body_counter > 5:
             self.body_counter = 1
@@ -157,6 +163,9 @@ class MenuRenderer(BaseRenderer):
         )
 
     def _previous_head(self) -> None:
+        """
+        Switches to the previous head texture. Cycles over to the last head texture if the current head texture is the first one.
+        """
         self.head_counter -= 1
         if self.head_counter < 1:
             self.head_counter = 5
@@ -168,6 +177,9 @@ class MenuRenderer(BaseRenderer):
         )
 
     def _previous_body(self) -> None:
+        """
+        Switches to the previous body texture. Cycles over to the last body texture if the current body texture is the first one.
+        """
         self.body_counter -= 1
         if self.body_counter < 1:
             self.body_counter = 5

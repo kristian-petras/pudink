@@ -1,4 +1,4 @@
-from typing import Any, Callable, Optional
+from typing import Any, Callable
 
 from pudink.client.controller.base_controller import BaseController
 from pudink.client.frontend.scene_manager import SceneManager
@@ -35,7 +35,7 @@ class MenuController(BaseController):
 
     """
 
-    on_fail_callback: Optional[Callable[[str], None]]
+    on_fail_callback: Callable[[str], None] | None
     _world_state: WorldState
     factory: PudinkClientFactory
     scene_manager: SceneManager

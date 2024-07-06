@@ -6,6 +6,14 @@ from pudink.client.renderer.base_renderer import BaseRenderer
 
 
 class TitleRenderer(BaseRenderer):
+    """
+    Renderer class for the title screen.
+    Used to display connection options to the server.
+
+    Args:
+        BaseRenderer (_type_): _description_
+    """
+
     def __init__(
         self,
         window: Window,

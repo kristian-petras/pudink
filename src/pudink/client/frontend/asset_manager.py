@@ -4,6 +4,10 @@ from pyglet.resource import image
 
 
 class AssetManager:
+    """
+    The AssetManager class manages the assets used in the application, such as textures for heads, bodies, buttons, and backgrounds.
+    """
+
     _head_mapping: dict[int, Texture]
     _body_mapping: dict[int, Texture]
     _background: Texture
@@ -11,7 +15,6 @@ class AssetManager:
     _button_depressed: Texture
     _button_hover: Texture
     _title: Texture
-
     _left: Texture
     _right: Texture
 
@@ -35,7 +38,6 @@ class AssetManager:
         self._button_depressed = self._init_image("button_depressed.png")
         self._button_hover = self._init_image("button_hover.png")
         self._title = self._init_image("title.png")
-
         self._left = self._init_image("left.png")
         self._right = self._init_image("right.png")
 

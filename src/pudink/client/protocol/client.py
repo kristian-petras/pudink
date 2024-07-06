@@ -24,6 +24,12 @@ class ClientCallback(Enum):
 
 
 class PudinkClient(protocol.Protocol):
+    """
+    Represents a client for the Pudink protocol.
+
+    This class handles the communication between the client and the server.
+    """
+
     factory: PudinkClientFactory
 
     def __init__(self, registeredCallbacks) -> None:

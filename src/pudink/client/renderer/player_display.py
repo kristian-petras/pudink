@@ -8,6 +8,20 @@ from pudink.client.frontend.color_palette import ColorPalette
 
 
 class PlayerDisplay:
+    """
+    Represents a player display in the game. Display consists of multiple sprites that are grouped together.
+
+    Attributes:
+        chat_bubbles (list[Label]): A list of chat bubble labels associated with the player display.
+        x (int): The x-coordinate of the player display.
+        y (int): The y-coordinate of the player display.
+        head (Texture): The texture for the player's head.
+        body (Texture): The texture for the player's body.
+        batch (Batch): The batch to which the player display belongs.
+        group (Group): The group to which the player display belongs.
+        shadow (Circle): The shadow circle for the player display.
+    """
+
     chat_bubbles: list[Label]
 
     def __init__(
@@ -36,6 +50,15 @@ class PlayerDisplay:
         self.chat_bubbles = []
 
     def create_chat_bubble(self, message: str) -> None:
+        """
+        Creates a chat bubble with the given message and adds it to the player display.
+
+        Args:
+            message (str): The message to be displayed in the chat bubble.
+
+        Returns:
+            None
+        """
         self.chat_bubbles.append(
             Label(
                 message,
@@ -50,6 +73,16 @@ class PlayerDisplay:
         )
 
     def move(self, x: int, y: int) -> None:
+        """
+        Moves the player display to the specified coordinates.
+
+        Args:
+            x (int): The new x-coordinate of the player display.
+            y (int): The new y-coordinate of the player display.
+
+        Returns:
+            None
+        """
         self.x = x
         self.y = y
         self.head.x = x
@@ -61,10 +94,29 @@ class PlayerDisplay:
         self._move_chat_bubbles(x, y)
 
     def pop_chat_bubble(self, _) -> None:
+        """
+        Removes the oldest chat bubble from the player display.
+
+        Args:
+            _ (Any): Placeholder argument (not used).
+
+        Returns:
+            None
+        """
         self.chat_bubbles.pop(0).delete()
         self._move_chat_bubbles(self.x, self.y)
 
     def _move_chat_bubbles(self, x: int, y: int) -> None:
+        """
+        Moves the chat bubbles to the specified coordinates.
+
+        Args:
+            x (int): The x-coordinate of the player display.
+            y (int): The y-coordinate of the player display.
+
+        Returns:
+            None
+        """
         for index, bubble in enumerate(self.chat_bubbles):
             bubble.x = x + 48
             bubble.y = y + 160 + 32 * index

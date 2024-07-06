@@ -13,6 +13,28 @@ from pudink.client.pyglet.password_text_entry import PasswordTextEntry
 
 
 class BaseRenderer:
+    """
+    The base renderer class for rendering graphics and handling user input.
+
+    Attributes:
+        _handlers (list): A list of event handlers.
+
+    Args:
+        window (Window): The window object for rendering.
+        asset_manager (AssetManager): The asset manager for accessing game assets.
+
+    Methods:
+        on_draw(): Clears the window and draws the batch.
+        on_key_press(symbol, modifiers): Handles key press events.
+        before_scene_switch(): Prepares for switching scenes by disabling event handlers.
+        after_scene_switch(): Restores event handlers after switching scenes.
+        create_entry(text, x, y, handler, width, password): Creates a text entry field.
+        create_button(x, y, handler, pressed, depressed, hover): Creates a push button.
+        create_label(x, y, text, width, multiline, anchor_x, anchor_y, align): Creates a label.
+        create_sprite(texture, x, y): Creates a sprite.
+
+    """
+
     _handlers: list
 
     def __init__(self, window: Window, asset_manager: AssetManager) -> None:
