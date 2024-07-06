@@ -78,7 +78,7 @@ class BaseHandler:
         self.broadcast_message(self.connection.player)
 
     def broadcast_message(self, message: Any) -> None:
-        if isinstance(message, bytes):
+        if not isinstance(message, bytes):
             message = MessageTranslator.encode(message)
         for c in self.factory.clients:
             if c != self.connection:

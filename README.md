@@ -1,7 +1,21 @@
 # pudink
 Cozy hypersocial game in Python.
 
-TODO - showcase
+1. Enter the host and port in the title screen to establish connection with the game server.
+
+<img src="/images/title.png" alt="image" width="300" height="auto">
+
+![Title screen](/images/title.png)
+
+
+2. Create a character and register with inserted credentials or log in if you have account created already.
+    - Every registered character needs to have unique head/body combination.
+
+![Login screen](/images/login.png)
+
+3. Move in the game world by ```[WASD]``` and ```[enter]``` chat messages in the text entry on the bottom of the screen.
+
+![Game screen](/images/gameplay.png)
 
 ## How to run
 
@@ -82,6 +96,7 @@ Contains implementation of Twisted protocol and required factories to create cli
 - ```flake8/autoflake/pre-commit-hooks``` to ensure code quality
 
 ## Next steps
+- Secure passwords, salt and pepper them
 - Integrate logging framework
 - Integrate configuration files
 - Cleanup packages, add exports to ```__init__.py```

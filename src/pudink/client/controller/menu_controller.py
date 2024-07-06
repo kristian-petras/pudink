@@ -76,7 +76,7 @@ class MenuController(BaseController):
         """
         print(f"Disconnected, switching to title screen: {message}")
         self.switch_screen("title")
-        self.factory.process_callback(ClientCallback.CONNECTION_FAILED, message)
+        self._factory.process_callback(ClientCallback.CONNECTION_FAILED, message)
 
     def register(
         self,
