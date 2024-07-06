@@ -52,7 +52,6 @@ class SceneManager:
             old_scene = self.current_scene
             if old_scene is not None:
                 old_scene.before_scene_switch()
-
             self.current_scene = self.scenes[name]
             self.current_scene.after_scene_switch()
             print(f"Switched to screen '{name}'")

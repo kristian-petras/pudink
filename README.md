@@ -93,6 +93,7 @@ Contains implementation of Twisted protocol and required factories to create cli
 - ```flake8/autoflake/pre-commit-hooks``` to ensure code quality
 
 ## Next steps
+- Add better unit test coverage
 - Secure passwords, salt and pepper them
 - Integrate logging framework
 - Integrate configuration files

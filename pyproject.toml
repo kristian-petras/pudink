@@ -34,4 +34,5 @@ dev = [
     "pre-commit>=3.7.0",
     "pyinstaller>=6.5.0",
     "flake8-bugbear>=24.4.26",
+    "pytest-mock>=3.14.0",
 ]
