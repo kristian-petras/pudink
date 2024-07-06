@@ -2,9 +2,9 @@ from typing import Any, Callable
 
 from pudink.client.controller.base_controller import BaseController
 from pudink.client.frontend.scene_manager import SceneManager
-from pudink.client.model.world_state import WorldState
-from pudink.client.protocol.client import ClientCallback
-from pudink.client.protocol.client_factory import PudinkClientFactory
+from pudink.client.game.client import ClientCallback
+from pudink.client.game.client_factory import PudinkClientFactory
+from pudink.client.game.world_state import WorldState
 from pudink.common.model import (
     Character,
     ConnectionFailure,
@@ -50,13 +50,13 @@ class MenuController(BaseController):
         self.on_fail_callback = None
         self._world_state = world_state
 
-        self.factory.register_callback(
+        self._factory.register_callback(
             ClientCallback.CONNECTION_FAILED,
             self._on_disconnect,
             self.scene,
         )
 
-        self.factory.register_callback(
+        self._factory.register_callback(
             ClientCallback.DATA_RECEIVED,
             self._on_data_received,
             self.scene,

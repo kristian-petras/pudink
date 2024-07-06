@@ -5,8 +5,8 @@ from pyglet.window import Window, key
 
 from pudink.client.controller.world_controller import WorldController
 from pudink.client.frontend.asset_manager import AssetManager
+from pudink.client.frontend.player_display import PlayerDisplay
 from pudink.client.renderer.base_renderer import BaseRenderer
-from pudink.client.renderer.player_display import PlayerDisplay
 from pudink.common.model import ChatMessage, Player, PlayerDisconnect, PlayerUpdate
 
 

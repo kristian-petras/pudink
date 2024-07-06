@@ -9,7 +9,7 @@ from pyglet.window import Window
 
 from pudink.client.frontend.asset_manager import AssetManager
 from pudink.client.frontend.color_palette import ColorPalette
-from pudink.client.pyglet.password_text_entry import PasswordTextEntry
+from pudink.client.frontend.password_text_entry import PasswordTextEntry
 
 
 class BaseRenderer:

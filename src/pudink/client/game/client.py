@@ -7,7 +7,7 @@ from typing import Any
 from twisted.internet import protocol
 
 if typing.TYPE_CHECKING:
-    from pudink.client.protocol.client_factory import PudinkClientFactory
+    from pudink.client.game.client_factory import PudinkClientFactory
 
 from pudink.common.model import ConnectionFailure, PlayerUpdate
 from pudink.common.translator import MessageTranslator

@@ -4,12 +4,12 @@ from typing import TYPE_CHECKING, Any, Callable
 
 from pudink.client.controller.base_controller import BaseController
 from pudink.client.frontend.scene_manager import SceneManager
-from pudink.client.model.world_state import WorldState
+from pudink.client.game.world_state import WorldState
 
 if TYPE_CHECKING:
-    from pudink.client.protocol.client_factory import PudinkClientFactory
+    from pudink.client.game.client_factory import PudinkClientFactory
 
-from pudink.client.protocol.client import ClientCallback
+from pudink.client.game.client import ClientCallback
 from pudink.common.model import ChatMessage, Player, PlayerDisconnect, PlayerUpdate
 
 

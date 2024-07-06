@@ -12,8 +12,8 @@ from pudink.client.controller.title_controller import TitleController
 from pudink.client.controller.world_controller import WorldController
 from pudink.client.frontend.asset_manager import AssetManager
 from pudink.client.frontend.scene_manager import SceneManager
-from pudink.client.model.world_state import WorldState
-from pudink.client.protocol.client_factory import PudinkClientFactory
+from pudink.client.game.client_factory import PudinkClientFactory
+from pudink.client.game.world_state import WorldState
 from pudink.client.renderer.menu_renderer import MenuRenderer
 from pudink.client.renderer.title_renderer import TitleRenderer
 from pudink.client.renderer.world_renderer import WorldRenderer

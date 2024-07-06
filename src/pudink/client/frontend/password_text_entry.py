@@ -3,7 +3,7 @@ from pyglet.graphics import Group
 from pyglet.text.caret import Caret
 from pyglet.text.layout import IncrementalTextLayout
 
-from pudink.client.pyglet.password_document import PasswordDocument
+from pudink.client.frontend.password_document import PasswordDocument
 
 
 class PasswordTextEntry(pyglet.gui.TextEntry):
