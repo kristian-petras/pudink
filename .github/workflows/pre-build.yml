@@ -31,6 +31,12 @@ jobs:
       - name: Install dependencies
         run: pdm install
 
+      - name: Cache pre-commit hooks
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/pre-commit
+          key: ${{ matrix.os }}-precommit-${{ hashFiles('.pre-commit-config.yaml') }}
+
       - name: Run pre-commit action
         uses: pre-commit/action@v3.0.1
         with:
