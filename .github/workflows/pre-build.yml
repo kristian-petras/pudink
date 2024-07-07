@@ -50,5 +50,6 @@ jobs:
         with:
           python_ver: ${{ matrix.python-version }}
           spec: 'src/pudink/client/__main__.py'
+          requirements: 'requirements.txt'
           upload_exe_with_name: 'pudink-${{ matrix.os }}'
           options: --onefile, --name "pudink", --windowed,
