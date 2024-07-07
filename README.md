@@ -20,8 +20,10 @@ Cozy hypersocial game in Python.
 - Find latest artefact in the GitHub release and download Windows/Mac/Linux build.
 - Install the game and play.
 
-### Run the server from the published Dockerfile
-- TODO
+### Run the server from the Dockerfile
+- Have Docker daemon installed and running.
+- ```docker build -t pudink-server .```
+- ```docker run -it --rm -p 8000:8000 pudink-server```
 
 ### Setup project
 - Have [pdm](https://pdm-project.org/en/latest/) installed.
