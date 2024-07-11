@@ -6,13 +6,13 @@ from twisted.internet import protocol
 from twisted.internet.interfaces import ITransport
 from twisted.python.failure import Failure
 
-from pudink.common.model import Player, PlayerDisconnect
-from pudink.server.database.connector import GameDatabase
-from pudink.server.handler.dispatcher import MessageDispatcher
-from pudink.server.protocol.connection_states import ConnectionState
+from common.model import Player, PlayerDisconnect
+from server.database.connector import GameDatabase
+from server.handler.dispatcher import MessageDispatcher
+from server.protocol.connection_states import ConnectionState
 
 if typing.TYPE_CHECKING:
-    from pudink.server.protocol.pudink_server import PudinkServer
+    from server.protocol.pudink_server import PudinkServer
 
 
 class PudinkConnection(protocol.Protocol):

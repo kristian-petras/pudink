@@ -2,18 +2,18 @@ from __future__ import annotations
 
 import typing
 
-from pudink.common.model import (
+from common.model import (
     ConnectionFailure,
     Credentials,
     NewAccount,
     Player,
     PlayerInitialization,
 )
-from pudink.server.handler.handler import BaseHandler
-from pudink.server.protocol.connection_states import ConnectionState
+from server.handler.handler import BaseHandler
+from server.protocol.connection_states import ConnectionState
 
 if typing.TYPE_CHECKING:
-    from pudink.server.protocol.pudink_connection import PudinkConnection
+    from server.protocol.pudink_connection import PudinkConnection
 
 
 class DisconnectedHandler(BaseHandler):

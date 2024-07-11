@@ -1,9 +1,9 @@
 from twisted.internet import protocol
 from twisted.internet.interfaces import IAddress
 
-from pudink.common.model import Player
-from pudink.server.database.connector import GameDatabase
-from pudink.server.protocol.pudink_connection import PudinkConnection
+from common.model import Player
+from server.database.connector import GameDatabase
+from server.protocol.pudink_connection import PudinkConnection
 
 
 class PudinkServer(protocol.ServerFactory):

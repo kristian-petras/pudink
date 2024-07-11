@@ -2,7 +2,7 @@ import os
 import sqlite3
 from typing import Optional, Union
 
-from pudink.common.model import (
+from common.model import (
     Character,
     ConnectionFailure,
     Credentials,

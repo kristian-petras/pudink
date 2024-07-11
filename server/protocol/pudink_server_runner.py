@@ -4,8 +4,8 @@ from sqlite3 import ProgrammingError
 from twisted.internet import reactor
 from twisted.internet.error import ReactorNotRunning
 
-from pudink.server.database.connector import GameDatabase
-from pudink.server.protocol.pudink_server import PudinkServer
+from server.database.connector import GameDatabase
+from server.protocol.pudink_server import PudinkServer
 
 
 class PudinkServerRunner:

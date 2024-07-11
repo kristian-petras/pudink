@@ -1,5 +1,5 @@
-from pudink.common.model import ChatMessage, PlayerUpdate
-from pudink.server.handler.handler import BaseHandler
+from common.model import ChatMessage, PlayerUpdate
+from server.handler.handler import BaseHandler
 
 
 class ConnectedHandler(BaseHandler):

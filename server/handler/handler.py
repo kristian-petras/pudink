@@ -3,7 +3,7 @@ from __future__ import annotations
 import typing
 from typing import Any, Callable
 
-from pudink.common.model import (
+from common.model import (
     ChatMessage,
     ConnectionFailure,
     Credentials,
@@ -12,12 +12,12 @@ from pudink.common.model import (
     PlayerSnapshot,
     PlayerUpdate,
 )
-from pudink.common.translator import MessageTranslator
-from pudink.server.database.connector import GameDatabase
+from common.translator import MessageTranslator
+from server.database.connector import GameDatabase
 
 if typing.TYPE_CHECKING:
-    from pudink.server.protocol.pudink_connection import PudinkConnection
-    from pudink.server.protocol.pudink_server import PudinkServer
+    from server.protocol.pudink_connection import PudinkConnection
+    from server.protocol.pudink_server import PudinkServer
 
 
 class BaseHandler:
