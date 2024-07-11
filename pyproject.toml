@@ -21,8 +21,8 @@ build-backend = "pdm.backend"
 distribution = true
 
 [tool.pdm.scripts]
-client = "python src/pudink/client/__main__.py"
-server = "python src/pudink/server/__main__.py"
+client = "python client/__main__.py"
+server = "python server/__main__.py"
 
 [tool.pdm.dev-dependencies]
 dev = [
