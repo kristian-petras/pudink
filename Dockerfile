@@ -6,8 +6,8 @@ RUN pip install pdm
 
 COPY pyproject.toml pdm.lock ./
 COPY README.md ./
-COPY src/pudink/server ./src/pudink/server
-COPY src/pudink/common ./src/pudink/common
+COPY server .server
+COPY common .common
 
 RUN pdm install
 
