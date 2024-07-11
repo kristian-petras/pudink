@@ -1,7 +1,7 @@
 import json
 from typing import Any
 
-from pudink.common.model import (
+from common.model import (
     Character,
     ChatMessage,
     ConnectionFailure,
