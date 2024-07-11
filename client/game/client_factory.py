@@ -3,8 +3,8 @@ from typing import Any, Callable, Optional
 from twisted.internet import protocol
 from twisted.internet.interfaces import IAddress
 
-from pudink.client.game.client import ClientCallback, PudinkClient
-from pudink.common.model import ConnectionFailure
+from client.game.client import ClientCallback, PudinkClient
+from common.model import ConnectionFailure
 
 
 class PudinkClientFactory(protocol.ClientFactory):

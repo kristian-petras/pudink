@@ -1,11 +1,11 @@
 from typing import Any, Callable
 
-from pudink.client.controller.base_controller import BaseController
-from pudink.client.frontend.scene_manager import SceneManager
-from pudink.client.game.client import ClientCallback
-from pudink.client.game.client_factory import PudinkClientFactory
-from pudink.client.game.world_state import WorldState
-from pudink.common.model import (
+from client.controller.base_controller import BaseController
+from client.frontend.scene_manager import SceneManager
+from client.game.client import ClientCallback
+from client.game.client_factory import PudinkClientFactory
+from client.game.world_state import WorldState
+from common.model import (
     Character,
     ConnectionFailure,
     Credentials,

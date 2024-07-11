@@ -2,7 +2,7 @@ from typing import Dict, Optional
 
 from pyglet.window import Window
 
-from pudink.client.renderer.base_renderer import BaseRenderer
+from client.renderer.base_renderer import BaseRenderer
 
 
 class SceneManager:

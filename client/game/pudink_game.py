@@ -7,16 +7,16 @@ from twisted.internet.defer import Deferred
 from twisted.internet.error import ReactorNotRunning
 from twisted.internet.task import LoopingCall
 
-from pudink.client.controller.menu_controller import MenuController
-from pudink.client.controller.title_controller import TitleController
-from pudink.client.controller.world_controller import WorldController
-from pudink.client.frontend.asset_manager import AssetManager
-from pudink.client.frontend.scene_manager import SceneManager
-from pudink.client.game.client_factory import PudinkClientFactory
-from pudink.client.game.world_state import WorldState
-from pudink.client.renderer.menu_renderer import MenuRenderer
-from pudink.client.renderer.title_renderer import TitleRenderer
-from pudink.client.renderer.world_renderer import WorldRenderer
+from client.controller.menu_controller import MenuController
+from client.controller.title_controller import TitleController
+from client.controller.world_controller import WorldController
+from client.frontend.asset_manager import AssetManager
+from client.frontend.scene_manager import SceneManager
+from client.game.client_factory import PudinkClientFactory
+from client.game.world_state import WorldState
+from client.renderer.menu_renderer import MenuRenderer
+from client.renderer.title_renderer import TitleRenderer
+from client.renderer.world_renderer import WorldRenderer
 
 
 class PudinkGame:
@@ -76,9 +76,6 @@ class PudinkGame:
         self._window.on_draw = scene_manager.on_draw
         self._window.on_key_press = scene_manager.on_key_press
         self._window.on_close = self.stop
-
-        pyglet.resource.path = ["assets", "assets/ui", "assets/head", "assets/body"]
-        pyglet.resource.reindex()
 
         world_state = WorldState()
         asset_manager = AssetManager()

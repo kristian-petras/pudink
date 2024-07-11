@@ -1,8 +1,8 @@
 from pyglet.window import Window
 
-from pudink.client.controller.menu_controller import MenuController
-from pudink.client.frontend.asset_manager import AssetManager
-from pudink.client.renderer.base_renderer import BaseRenderer
+from client.controller.menu_controller import MenuController
+from client.frontend.asset_manager import AssetManager
+from client.renderer.base_renderer import BaseRenderer
 
 
 class MenuRenderer(BaseRenderer):

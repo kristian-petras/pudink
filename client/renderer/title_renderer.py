@@ -1,8 +1,8 @@
 from pyglet.window import Window
 
-from pudink.client.controller.title_controller import TitleController
-from pudink.client.frontend.asset_manager import AssetManager
-from pudink.client.renderer.base_renderer import BaseRenderer
+from client.controller.title_controller import TitleController
+from client.frontend.asset_manager import AssetManager
+from client.renderer.base_renderer import BaseRenderer
 
 
 class TitleRenderer(BaseRenderer):

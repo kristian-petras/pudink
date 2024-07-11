@@ -4,7 +4,7 @@ from pyglet.shapes import Circle
 from pyglet.sprite import Sprite
 from pyglet.text import Label
 
-from pudink.client.frontend.color_palette import ColorPalette
+from client.frontend.color_palette import ColorPalette
 
 
 class PlayerDisplay:

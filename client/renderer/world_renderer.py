@@ -3,11 +3,11 @@ from pyglet.gui import TextEntry
 from pyglet.sprite import Sprite
 from pyglet.window import Window, key
 
-from pudink.client.controller.world_controller import WorldController
-from pudink.client.frontend.asset_manager import AssetManager
-from pudink.client.frontend.player_display import PlayerDisplay
-from pudink.client.renderer.base_renderer import BaseRenderer
-from pudink.common.model import ChatMessage, Player, PlayerDisconnect, PlayerUpdate
+from client.controller.world_controller import WorldController
+from client.frontend.asset_manager import AssetManager
+from client.frontend.player_display import PlayerDisplay
+from client.renderer.base_renderer import BaseRenderer
+from common.model import ChatMessage, Player, PlayerDisconnect, PlayerUpdate
 
 
 class WorldRenderer(BaseRenderer):

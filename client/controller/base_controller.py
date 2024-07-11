@@ -1,8 +1,8 @@
 from typing import Any, Callable
 
-from pudink.client.frontend.scene_manager import SceneManager
-from pudink.client.game.client import ClientCallback
-from pudink.client.game.client_factory import PudinkClientFactory
+from client.frontend.scene_manager import SceneManager
+from client.game.client import ClientCallback
+from client.game.client_factory import PudinkClientFactory
 
 
 class BaseController:

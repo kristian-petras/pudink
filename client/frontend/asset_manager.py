@@ -1,3 +1,4 @@
+import pyglet
 from pyglet.gl import GL_NEAREST, GL_TEXTURE_MAG_FILTER, glBindTexture, glTexParameteri
 from pyglet.image import Texture
 from pyglet.resource import image
@@ -19,6 +20,14 @@ class AssetManager:
     _right: Texture
 
     def __init__(self) -> None:
+        pyglet.resource.path = [
+            "assets",
+            "assets/ui",
+            "assets/head",
+            "assets/body",
+        ]
+        pyglet.resource.reindex()
+
         self._head_mapping = {
             1: self._init_image("simple_head.png"),
             2: self._init_image("monkey_head.png"),

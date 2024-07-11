@@ -7,10 +7,10 @@ from typing import Any
 from twisted.internet import protocol
 
 if typing.TYPE_CHECKING:
-    from pudink.client.game.client_factory import PudinkClientFactory
+    from client.game.client_factory import PudinkClientFactory
 
-from pudink.common.model import ConnectionFailure, PlayerUpdate
-from pudink.common.translator import MessageTranslator
+from common.model import ConnectionFailure, PlayerUpdate
+from common.translator import MessageTranslator
 
 
 class ClientCallback(Enum):

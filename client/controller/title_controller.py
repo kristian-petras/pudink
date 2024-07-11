@@ -1,8 +1,8 @@
 from typing import Callable, Optional
 
-from pudink.client.controller.base_controller import BaseController
-from pudink.client.game.client import ClientCallback
-from pudink.common.model import ConnectionFailure
+from client.controller.base_controller import BaseController
+from client.game.client import ClientCallback
+from common.model import ConnectionFailure
 
 
 class TitleController(BaseController):

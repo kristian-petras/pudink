@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from typing import Dict, Optional
 
-from pudink.common.model import Player, PlayerDisconnect, PlayerSnapshot, PlayerUpdate
+from common.model import Player, PlayerDisconnect, PlayerSnapshot, PlayerUpdate
 
 
 @dataclass

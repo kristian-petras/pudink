@@ -7,9 +7,9 @@ from pyglet.sprite import Sprite
 from pyglet.text import Label
 from pyglet.window import Window
 
-from pudink.client.frontend.asset_manager import AssetManager
-from pudink.client.frontend.color_palette import ColorPalette
-from pudink.client.frontend.password_text_entry import PasswordTextEntry
+from client.frontend.asset_manager import AssetManager
+from client.frontend.color_palette import ColorPalette
+from client.frontend.password_text_entry import PasswordTextEntry
 
 
 class BaseRenderer:
