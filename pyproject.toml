@@ -21,7 +21,7 @@ build-backend = "pdm.backend"
 distribution = true
 
 [tool.pdm.scripts]
-client = "python client/__main__.py"
+client = "python client.py"
 server = "python server/__main__.py"
 
 [tool.pdm.dev-dependencies]
